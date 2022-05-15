@@ -19,7 +19,7 @@ public abstract class Organism {
     protected World world;
     protected Random rand = new Random();
 
-    Organism(World _world) {
+    public Organism(World _world) {
         world = _world;
         strength = -1;
         initiative = -1;
@@ -65,6 +65,10 @@ public abstract class Organism {
 
     public boolean getIsAlive() {
         return isAlive;
+    }
+
+    public int getStepRange() {
+        return stepRange;
     }
 
     public World getWorld() {

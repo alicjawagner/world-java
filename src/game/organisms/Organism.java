@@ -2,6 +2,8 @@ package game.organisms;
 
 import game.world.World;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Organism {
     protected String name;
@@ -13,25 +15,65 @@ public abstract class Organism {
     protected int stepRange;
     protected World world;
 
-    Organism(World world) {
-        world = world;
+    Organism(World _world) {
+        world = _world;
         strength = -1;
         initiative = -1;
         isAlive = true;
         stepRange = 1;
         birthTime = world.getNumberOfBornOrganisms() + 1;
 
+        Random rand = new Random();
         int x, y;
-        int wys = swiat.getWysokosc();
-        int szer = swiat.getSzerokosc();
+        int fields = World.FIELDS_NUMBER;
         do {
-            x = rand() % wys;
-            y = rand() % szer;
-        } while (swiat.plansza[x][y] != SYMBOL_PUSTEGO_POLA);
+            x = rand.nextInt(fields);
+            y = rand.nextInt(fields);
+        } while (world.board[x][y] != null);
 
-        polozenie.x = x;
-        polozenie.y = y;
+        point.x = x;
+        point.y = y;
 
+    }
+
+    public abstract int whoAmI();
+    public abstract void action();
+    public abstract void draw();
+
+    public String getName() {
+        return name;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getInitiative() {
+        return initiative;
+    }
+
+    public Point getPoint() {
+        return point;
+    }
+
+    public int getBirthTime() {
+        return birthTime;
+    }
+
+    public boolean getIsAlive() {
+        return isAlive;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setStrength(final int newStrength) {
+        strength = newStrength;
+    }
+
+    public void setBirthTime(final int _birthTime) {
+        birthTime = _birthTime;
     }
 
     protected enum Strength {
@@ -45,197 +87,74 @@ public abstract class Organism {
 	else if (strength == other.strength) return Strength.EQUAL;
 	else return Strength.WEAKER;
     }
+
+    public boolean ifIRepelledTheAttack(final Organism attacker) {
+        return false;
+    }
+
+    public boolean ifIEscaped(Animal attacker) {
+        return false;
+    }
+
+    public boolean ifIWonTheFight(Organism attacker) {
+        return amIStronger(attacker) == Strength.STRONGER;
+    }
+
+    public ArrayList<Point> findFieldsToMove() {
+        Point current, possibleMove;
+        current = point;
+
+        ArrayList<Point> possibleMoves = new ArrayList<>();
+        for (int i = -1 * stepRange; i <= stepRange; i += stepRange) {
+            for (int j = -1 * stepRange; j <= stepRange; j += stepRange) {
+                if (i == 0 && j == 0)
+                    continue;
+
+                possibleMove = new Point(current.x + i, current.y + j);
+                if (world.isFieldInBoard(possibleMove))
+                    possibleMoves.add(possibleMove);
+            }
+        }
+
+        return possibleMoves;
+    }
+
+    public void removeOccupiedFields(ArrayList<Point> possibleMoves) {
+        possibleMoves.removeIf(field -> (!world.isFieldUnoccupied(field)));
+    }
+
+    public void putOnBoard() {
+        world.board[point.x][point.y] = this;
+    }
+
+    public void moveToField(Point newPoint) {
+        world.clearTheField(point);
+        point = newPoint;
+        putOnBoard();
+    }
+
+    public void writeIWon() {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        // change to some string to be shown, not print line
+        //System.out.println(name + " (" + point.x + "," + point.y + ") won the fight: ");
+    }
+
+    public void writeIDie() {
+        //////////////////////////////////////////////////////////////////////////
+        // not print line
+        //System.out.println(name + " is dead :(\n");
+    }
 }
 
 /*
 * class Organizm {
-protected:
-	virtual int kimJestem() const = 0;
 public:
-	Organizm(Swiat& swiat);
-	~Organizm();
-
-	std::string getNazwa() const;
-	int getSila() const;
-	int getInicjatywa() const;
-	Polozenie getPolozenie() const;
-	int getCzasNarodzin() const;
-	bool getCzyZyje() const;
-	Swiat& getSwiat() const;
-
-	void setSila(const int& ile);
-	void setCzasNarodzin(const int& ile);
-
-	virtual std::vector<Polozenie> znajdzPolaDoRuchu() const;
-	void usunZajetePola(std::vector<Polozenie>& pola);
-	void przesunNaPole(Polozenie& pole);
-	virtual bool czyOdbilemAtak(const Organizm& atakujacy) const;
-	virtual bool czyUcieklem(Zwierze& atakujacy);
-	virtual bool czyWygralemWalke(Organizm& atakujacy);
-	virtual void piszWygrywam() const = 0;
-	virtual void piszUmieram() const;
-	void umrzyj();
-	virtual void akcja() = 0;
-	virtual char rysujNaPlanszy() = 0;
-	void stworzDziecko(std::vector<Polozenie>& pola) const;
-};
-*
-*
-* Organizm::Organizm(Swiat& swiat) : swiat(swiat) {
-	sila = -1;
-	inicjatywa = -1;
-	czyZyje = true;
-	zasiegRuchu = 1;
-	czasNarodzin = swiat.getLiczbaNarodzonychZwierzat() + 1;
-
-	int x, y;
-	int wys = swiat.getWysokosc();
-	int szer = swiat.getSzerokosc();
-	do {
-		x = rand() % wys;
-		y = rand() % szer;
-	} while (swiat.plansza[x][y] != SYMBOL_PUSTEGO_POLA);
-
-	polozenie.x = x;
-	polozenie.y = y;
-
-}
-
-Organizm::~Organizm() {
-}
-
-
-
-//gettery
-std::string Organizm::getNazwa() const {
-	return nazwa;
-}
-
-int Organizm::getSila() const {
-	return sila;
-}
-
-int Organizm::getInicjatywa() const {
-	return inicjatywa;
-}
-
-Polozenie Organizm::getPolozenie() const {
-	return polozenie;
-}
-
-int Organizm::getCzasNarodzin() const {
-	return czasNarodzin;
-}
-
-bool Organizm::getCzyZyje() const {
-	return czyZyje;
-}
-
-Swiat& Organizm::getSwiat() const {
-	return swiat;
-}
-
-
-void Organizm::setSila(const int& ile) {
-	sila = ile;
-}
-
-void Organizm::setCzasNarodzin(const int& ile) {
-	czasNarodzin = ile;
-}
-
-
-
-std::vector<Polozenie> Organizm::znajdzPolaDoRuchu() const {
-	Polozenie obecny, doDodania;
-	obecny = polozenie;
-
-	std::vector<Polozenie> polaDoRuchu;
-
-	for (int i = -1 * zasiegRuchu; i <= zasiegRuchu; i += zasiegRuchu) {
-		for (int j = -1 * zasiegRuchu; j <= zasiegRuchu; j += zasiegRuchu) {
-			if (i == 0 && j == 0)
-				continue;
-
-			doDodania = { obecny.x + i, obecny.y + j };
-			if (swiat.czyPoleNalezyDoPlanszy(doDodania))
-				polaDoRuchu.push_back(doDodania);
-		}
-	}
-
-	return polaDoRuchu;
-}
-
-
-
-void Organizm::usunZajetePola(std::vector<Polozenie>& pola) {
-	if (pola.size() <= 0)
-		return;
-
-	std::vector<int> doUsuniecia;
-
-	for (int p = 0; p < pola.size(); p++) {
-		if (swiat.czyPoleWolne(pola[p]) == false)
-			doUsuniecia.push_back(p);
-	}
-
-	for (int i = doUsuniecia.size() - 1; i >= 0; i--) {
-		int p = doUsuniecia[i];
-		pola.erase(pola.begin() + p);
-	}
-}
-
-
-
-void Organizm::przesunNaPole(Polozenie& pole) {
-	swiat.zwolnijPoleNaPlanszy(polozenie);
-	swiat.plansza[pole.x][pole.y] = rysujNaPlanszy();
-	polozenie = pole;
-}
-
-
-
-bool Organizm::czyOdbilemAtak(const Organizm& atakujacy) const {
-	return false;
-}
-
-
-
-bool Organizm::czyUcieklem(Zwierze& atakujacy) {
-	return false;
-}
-
-
-
-int Organizm::czyJestemSilniejszy(const Organizm& drugi) const {
-	if (this->sila > drugi.sila) return SILNIEJSZY;
-	else if (this->sila == drugi.sila) return ROWNY;
-	else return SLABSZY;
-}
-
-
-
-bool Organizm::czyWygralemWalke(Organizm& atakujacy) {
-	if (czyJestemSilniejszy(atakujacy) == SILNIEJSZY)
-		return true;
-	return false;
-}
-
-
-
-void Organizm::piszUmieram() const {
-	std::cout << nazwa << " nie zyje :(" << std::endl;
-}
-
-
 
 void Organizm::umrzyj() {
 	czyZyje = false;
 	swiat.zwolnijPoleNaPlanszy(this->polozenie);
 	piszUmieram();
 }
-
-
 
 void Organizm::stworzDziecko(std::vector<Polozenie>& pola) const {
 	Organizm* dziecko = swiat.stworzOrganizm(this->kimJestem());

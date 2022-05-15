@@ -46,7 +46,7 @@ public class World {
 
     public Organism searchArrayList(final Point point, final ArrayList<Organism> arr) {
         for (Organism o : arr) {
-            if (o.getIsAlive() && o.point == point) {
+            if (o.getIsAlive() && o.getPoint() == point) {
                 return o;
             }
         }
@@ -66,6 +66,22 @@ public class World {
         organisms.removeIf(o -> (!o.getIsAlive()));
         toAdd.removeIf(o -> (!o.getIsAlive()));
     }
+
+    // returns index, at which newOrg should be added, if at the end: -1
+    private int findPlaceInOrganisms(final Organism newOrg) {
+        for (int i = 0; i < organisms.size(); i++) {
+            if (organisms.get(i).getInitiative() < newOrg.getInitiative()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void insertIntoToAdd(Organism newOrg) {
+        toAdd.add(newOrg);
+    }
+
+
 
     /*
     skastuj na plant albo animal
@@ -121,24 +137,18 @@ class Swiat {
 private:
 
 	void rysujPlansze() const;
-
-	void usunMartwe();
 	void stworzIDodajOrganizm(const int& jaki);
-	//zwraca indeks organimzu, przed ktorym ma byc wstawiony nowy; jesli na koncu: -1
-	int znajdzMiejsceWVectorzeOrganizmy(const Organizm& doWstawienia) const;
 	int wykonajTure();
 
 public:
-	void zwolnijPoleNaPlanszy(const Polozenie& miejsce);
 	const int coJestNaPlanszy(const Polozenie& miejsce) const;
-	Organizm* przeszukajVector(const Polozenie& miejsce, const std::vector<Organizm*>& vect) const;
-	Organizm* znajdzOrganizmNaPolu(const Polozenie& miejsce) const;
 	Organizm* stworzOrganizm(const int& jaki);
 	void dodajOrganizm(Organizm*& doDodania);
-	void dodajDoVectoraDoDodania(Organizm*& doDodania);
 
 	void przygotujDoGry();
 	void rozpocznijGre();
+
+
 
 void Swiat::rysujPlansze() const {
 	for (int i = 0; i < wysokosc; i++) {
@@ -147,14 +157,6 @@ void Swiat::rysujPlansze() const {
 		std::cout << std::endl;
 	}
 }
-
-
-
-
-
-
-
-
 
 Organizm* Swiat::stworzOrganizm(const int& jaki) {
 	Organizm* o = nullptr;
@@ -197,7 +199,6 @@ Organizm* Swiat::stworzOrganizm(const int& jaki) {
 }
 
 
-
 void Swiat::dodajOrganizm(Organizm*& doDodania) {
 	int przedTym = znajdzMiejsceWVectorzeOrganizmy(*doDodania);
 	if (przedTym == -1)
@@ -210,31 +211,10 @@ void Swiat::dodajOrganizm(Organizm*& doDodania) {
 }
 
 
-
-void Swiat::dodajDoVectoraDoDodania(Organizm*& doDodania) {
-	orgDoDodania.push_back(doDodania);
-}
-
-
-
 void Swiat::stworzIDodajOrganizm(const int& jaki) {
 	Organizm* o = stworzOrganizm(jaki);
 	dodajOrganizm(o);
 }
-
-
-
-int Swiat::znajdzMiejsceWVectorzeOrganizmy(const Organizm& doWstawienia) const {
-	int przedTym = -1;
-	for (int i = 0; i < organizmy.size(); i++) {
-		if (organizmy[i]->getInicjatywa() < doWstawienia.getInicjatywa()) {
-			przedTym = i;
-			return przedTym;
-		}
-	}
-	return przedTym;
-}
-
 
 
 int Swiat::wykonajTure() {
@@ -268,7 +248,6 @@ int Swiat::wykonajTure() {
 }
 
 
-
 void Swiat::przygotujDoGry() {
 	for (int i = 0; i < LICZBA_GATUNKOW; i++) {
 		for (int j = 0; j < POCZ_LICZBA_ORGANIZMOW_GATUNKU; j++) {
@@ -282,7 +261,6 @@ void Swiat::przygotujDoGry() {
 
 	rysujPlansze();
 }
-
 
 
 void Swiat::rozpocznijGre() {
@@ -299,16 +277,6 @@ void Swiat::rozpocznijGre() {
 	}
 }
 
-
-
-Swiat::~Swiat() {
-	for (Organizm*& o : organizmy) {
-		if (o != nullptr)
-			delete o;
-	}
-
-	zwolnijPamiecPlanszy();
-}
 };
 
  */

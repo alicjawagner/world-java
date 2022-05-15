@@ -1,11 +1,14 @@
 package game.organisms;
 
+import game.world.OrganismsNames;
 import game.world.World;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Organism {
+
     protected String name;
     protected int strength;
     protected int initiative;
@@ -14,6 +17,7 @@ public abstract class Organism {
     protected boolean isAlive;
     protected int stepRange;
     protected World world;
+    protected Random rand = new Random();
 
     Organism(World _world) {
         world = _world;
@@ -23,7 +27,6 @@ public abstract class Organism {
         stepRange = 1;
         birthTime = world.getNumberOfBornOrganisms() + 1;
 
-        Random rand = new Random();
         int x, y;
         int fields = World.FIELDS_NUMBER;
         do {
@@ -36,7 +39,7 @@ public abstract class Organism {
 
     }
 
-    public abstract int whoAmI();
+    public abstract OrganismsNames whoAmI();
     public abstract void action();
     public abstract void draw();
 
@@ -144,23 +147,18 @@ public abstract class Organism {
         // not print line
         //System.out.println(name + " is dead :(\n");
     }
+
+    public void die() {
+        isAlive = false;
+        world.clearTheField(point);
+        writeIDie();
+    }
+
+    public void makeChild(ArrayList<Point> possibleFields) {
+        Organism child = world.stworzOrganizm(this.whoAmI());
+
+        int which = rand.nextInt(possibleFields.size());
+        child.moveToField(possibleFields.get(which));
+        world.insertIntoToAdd(child);
+    }
 }
-
-/*
-* class Organizm {
-public:
-
-void Organizm::umrzyj() {
-	czyZyje = false;
-	swiat.zwolnijPoleNaPlanszy(this->polozenie);
-	piszUmieram();
-}
-
-void Organizm::stworzDziecko(std::vector<Polozenie>& pola) const {
-	Organizm* dziecko = swiat.stworzOrganizm(this->kimJestem());
-
-	int ktore = rand() % pola.size();
-	dziecko->przesunNaPole(pola[ktore]);
-	swiat.dodajDoVectoraDoDodania(dziecko);
-}
-* */

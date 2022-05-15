@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class World {
+
     public static final int BOARD_SIZE = 700;
     public static final int FIELD_SIZE = 35;
     public static final int FIELDS_NUMBER = (BOARD_SIZE / FIELD_SIZE); //20 - how many fields each dimension
@@ -81,43 +82,18 @@ public class World {
         toAdd.add(newOrg);
     }
 
+    public OrganismsNames whatIsOnBoard(final Point where) {
+        Organism who = board[where.x][where.y];
+        if (who == null)
+            return null;
+
+        return who.whoAmI();
+    }
+
 
 
     /*
-    skastuj na plant albo animal
 
-    const int Swiat::coJestNaPlanszy(const Polozenie& miejsce) const {
-        char pole = plansza[miejsce.x][miejsce.y];
-
-        switch (pole) {
-            case SYMBOL_PUSTEGO_POLA:
-                return PUSTE_POLE;
-            case SYMBOL_LISA:
-                return LIS;
-            case SYMBOL_WILKA:
-                return WILK;
-            case SYMBOL_OWCY:
-                return OWCA;
-            case SYMBOL_ANTYLOPY:
-                return ANTYLOPA;
-            case SYMBOL_CZLOWIEKA:
-                return CZLOWIEK;
-            case SYMBOL_ZOLWIA:
-                return ZOLW;
-            case SYMBOL_TRAWY:
-                return TRAWA;
-            case SYMBOL_MLECZA:
-                return MLECZ;
-            case SYMBOL_GUARANY:
-                return GUARANA;
-            case SYMBOL_JAGOD:
-                return JAGODY;
-            case SYMBOL_BARSZCZU:
-                return BARSZCZ;
-        }
-
-        return -1;
-    }
 
     Czlowiek* Swiat::znajdzCzlowieka() const {
         Czlowiek* szukany = nullptr;

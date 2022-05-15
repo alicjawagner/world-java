@@ -6,8 +6,6 @@ import game.world.World;
 
 import java.awt.*;
 
-import static game.world.OrganismsNames.PINE_BORSCHT;
-
 public class PineBorscht extends Plant {
 
     public PineBorscht(World _world) {
@@ -18,11 +16,12 @@ public class PineBorscht extends Plant {
 
     @Override
     public OrganismsNames whoAmI() {
-        return PINE_BORSCHT;
+        return OrganismsNames.PINE_BORSCHT;
     }
 
     @Override
     public void draw() {
+        ///////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     @Override

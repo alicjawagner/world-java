@@ -26,4 +26,10 @@ public abstract class Plant extends Organism {
             makeChild(possibleMoves);
         }
     }
+
+    @Override
+    public void writeIDie() {
+        ///////////////////////////////////////////////////////////////////////////////////////
+        //cout << name + " was eaten :(\n";
+    }
 }

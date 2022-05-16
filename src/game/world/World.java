@@ -1,6 +1,8 @@
 package game.world;
 
 import game.organisms.Organism;
+import game.organisms.animals.*;
+import game.organisms.plants.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,24 +12,15 @@ public class World {
     public static final int BOARD_SIZE = 700;
     public static final int FIELD_SIZE = 35;
     public static final int FIELDS_NUMBER = (BOARD_SIZE / FIELD_SIZE); //20 - how many fields each dimension
+    private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
+
     public Organism[][] board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
     private int numberOfBornOrganisms = 0;
-    private boolean isHumanAlive = true;
-    //private Human human;
-    public ArrayList<Organism> organisms;
-    public ArrayList<Organism> toAdd;
+    private Human human = null;
+    public ArrayList<Organism> organisms = new ArrayList<>();
+    public ArrayList<Organism> toAdd = new ArrayList<>();
 
-    public World() {
-        initializeBoard();
-    }
-
-    private void initializeBoard() {
-        for(Organism[] rowOfBoard : board) {
-            for(Organism o : rowOfBoard) {
-                o = null;
-            }
-        }
-    }
+    public World() {}
 
     public int getNumberOfBornOrganisms() {
         return numberOfBornOrganisms;
@@ -68,7 +61,9 @@ public class World {
         toAdd.removeIf(o -> (!o.getIsAlive()));
     }
 
-    // returns index, at which newOrg should be added, if at the end: -1
+    /**
+     * returns index, at which newOrg should be added; if at the end: -1
+     */
     private int findPlaceInOrganisms(final Organism newOrg) {
         for (int i = 0; i < organisms.size(); i++) {
             if (organisms.get(i).getInitiative() < newOrg.getInitiative()) {
@@ -90,169 +85,125 @@ public class World {
         return who.whoAmI();
     }
 
+    public Organism createOrganism(final OrganismsNames which) {
+        Organism o = null;
+        switch (which) {
+            case FOX:
+                o = new Fox(this);
+                break;
+            case WOLF:
+                o = new Wolf(this);
+                break;
+            case SHEEP:
+                o = new Sheep(this);
+                break;
+            case ANTELOPE:
+                o = new Antelope(this);
+                break;
+            case HUMAN:
+                if (human == null) {
+                    o = new Human(this);
+                    human = (Human) o;
+                }
+                break;
+            case TURTLE:
+                o = new Turtle(this);
+                break;
+            case GRASS:
+                o = new Grass(this);
+                break;
+            case DANDELION:
+                o = new Dandelion(this);
+                break;
+            case GUARANA:
+                o = new Guarana(this);
+                break;
+            case DEADLY_NIGHTSHADE:
+                o = new DeadlyNightshade(this);
+                break;
+            case PINE_BORSCHT:
+                o = new PineBorscht(this);
+                break;
+        }
+        return o;
+    }
 
+    public void addOrganism(Organism newOrg) {
+        if (newOrg == null) return;
 
-    /*
+        int beforeThat = findPlaceInOrganisms(newOrg);
+        if (beforeThat == -1)
+            organisms.add(newOrg);
+        else
+            organisms.add(beforeThat, newOrg);
 
+        newOrg.putOnBoard();
+        numberOfBornOrganisms++;
+    }
 
-    Czlowiek* Swiat::znajdzCzlowieka() const {
-        Czlowiek* szukany = nullptr;
-        for (int i = 0; i < organizmy.size(); i++) {
-            if (organizmy[i]->getNazwa() == "czlowiek") {
-                szukany = dynamic_cast<Czlowiek*>(organizmy[i]);
-                return szukany;
+    public void createAndAddOrganism(final OrganismsNames which) {
+        addOrganism(createOrganism(which));
+    }
+
+    private void drawBoard() {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    private void prepareGame() {
+        for (OrganismsNames org : OrganismsNames.values()) {
+            for (int i = 0; i < INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES; i++) {
+                if (org == OrganismsNames.HUMAN) {
+                    createAndAddOrganism(OrganismsNames.HUMAN);
+                    break;
+                }
+                createAndAddOrganism(org);
             }
         }
-	    return szukany;
+
+        drawBoard();
     }
-     */
+
+    private int makeRound() {
+        /*
+        int klawisz = human.wczytajStrzalki();
+
+        if (klawisz == ESC)
+            return ESC;
+        if (klawisz == ELIKSIR)
+            human.startElixir();
+        */
+        for (Organism o : organisms) {
+            if (o.getIsAlive())
+                o.action();
+        }
+
+        removeDead();
+
+        // add waiting organisms to main ArrayList
+        for (Organism o : toAdd) {
+            addOrganism(o);
+            o.setBirthTime(numberOfBornOrganisms);
+        }
+        toAdd.clear();
+
+        drawBoard();
+
+        return 1;
+    }
+
+    public void startGame() {
+        prepareGame();
+        int ch = 1;
+
+        // "Let's start the game!\n"
+        // jak uzywac: strzalkli, eliksir (+5 do Twojej sily)
+        while (ch != -1) { //ch != ESC
+            ch = makeRound();
+            if (human == null) {
+                // "Game over :C. Good luck next time!"
+                break;
+            }
+        }
+    }
+
 }
-
-/*
-class Swiat {
-private:
-
-	void rysujPlansze() const;
-	void stworzIDodajOrganizm(const int& jaki);
-	int wykonajTure();
-
-public:
-	const int coJestNaPlanszy(const Polozenie& miejsce) const;
-	Organizm* stworzOrganizm(const int& jaki);
-	void dodajOrganizm(Organizm*& doDodania);
-
-	void przygotujDoGry();
-	void rozpocznijGre();
-
-
-
-void Swiat::rysujPlansze() const {
-	for (int i = 0; i < wysokosc; i++) {
-		for (int j = 0; j < szerokosc; j++)
-			std::cout << plansza[i][j];
-		std::cout << std::endl;
-	}
-}
-
-Organizm* Swiat::stworzOrganizm(const int& jaki) {
-	Organizm* o = nullptr;
-	switch (jaki) {
-	case LIS:
-		o = new Lis(*this);
-		break;
-	case WILK:
-		o = new Wilk(*this);
-		break;
-	case OWCA:
-		o = new Owca(*this);
-		break;
-	case ANTYLOPA:
-		o = new Antylopa(*this);
-		break;
-	case CZLOWIEK:
-		o = new Czlowiek(*this);
-		break;
-	case ZOLW:
-		o = new Zolw(*this);
-		break;
-	case TRAWA:
-		o = new Trawa(*this);
-		break;
-	case MLECZ:
-		o = new Mlecz(*this);
-		break;
-	case GUARANA:
-		o = new Guarana(*this);
-		break;
-	case JAGODY:
-		o = new WilczeJagody(*this);
-		break;
-	case BARSZCZ:
-		o = new BarszczSosnowskiego(*this);
-		break;
-	}
-	return o;
-}
-
-
-void Swiat::dodajOrganizm(Organizm*& doDodania) {
-	int przedTym = znajdzMiejsceWVectorzeOrganizmy(*doDodania);
-	if (przedTym == -1)
-		organizmy.push_back(doDodania);
-	else
-		organizmy.insert(organizmy.begin() + przedTym, doDodania);
-
-	plansza[doDodania->getPolozenie().x][doDodania->getPolozenie().y] = doDodania->rysujNaPlanszy();
-	liczbaNarodzonychOrganizmow++;
-}
-
-
-void Swiat::stworzIDodajOrganizm(const int& jaki) {
-	Organizm* o = stworzOrganizm(jaki);
-	dodajOrganizm(o);
-}
-
-
-int Swiat::wykonajTure() {
-	Czlowiek* czlowiek = znajdzCzlowieka();
-	int klawisz = czlowiek->wczytajStrzalki();
-
-	system("cls");
-
-	if (klawisz == ESC)
-		return ESC;
-	if (klawisz == ELIKSIR)
-		czlowiek->wlaczEliksir();
-
-	for (Organizm*& o : organizmy) {
-		if (o->getCzyZyje() == true)
-			o->akcja();
-	}
-
-	usunMartwe();
-
-	for (Organizm*& o : orgDoDodania) {	//dodaj oczekujace organizmy do wlasciwego vectora
-		dodajOrganizm(o);
-		o->setCzasNarodzin(liczbaNarodzonychOrganizmow);
-	}
-	orgDoDodania.clear();
-
-	rysujPlansze();
-	std::cout << std::endl;
-
-	return 1;
-}
-
-
-void Swiat::przygotujDoGry() {
-	for (int i = 0; i < LICZBA_GATUNKOW; i++) {
-		for (int j = 0; j < POCZ_LICZBA_ORGANIZMOW_GATUNKU; j++) {
-			if (i == CZLOWIEK) {
-				stworzIDodajOrganizm(CZLOWIEK);
-				break;
-			}
-			stworzIDodajOrganizm(i);
-		}
-	}
-
-	rysujPlansze();
-}
-
-
-void Swiat::rozpocznijGre() {
-	int ch = 1;
-
-	std::cout << "Rozpoczynamy gre!" << std::endl;
-	while (ch != ESC) {
-		std::cout << "Nowa runda: strzalka. Eliksir (+5 do Twojej sily): E. Wyjscie: esc." << std::endl << std::endl;
-		ch = wykonajTure();
-		if (znajdzCzlowieka() == nullptr) {
-			std::cout << "Zostales pokonany, koniec gry :C. Powodzenia nastepnym razem!" << std::endl;
-			break;
-		}
-	}
-}
-
-};
-
- */

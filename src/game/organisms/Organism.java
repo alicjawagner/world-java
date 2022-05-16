@@ -159,7 +159,7 @@ public abstract class Organism {
     }
 
     public void makeChild(ArrayList<Point> possibleFields) {
-        Organism child = world.stworzOrganizm(this.whoAmI());
+        Organism child = world.createOrganism(this.whoAmI());
 
         int which = rand.nextInt(possibleFields.size());
         child.moveToField(possibleFields.get(which));

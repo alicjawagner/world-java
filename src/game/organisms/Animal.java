@@ -11,7 +11,9 @@ public abstract class Animal extends Organism {
         super(_world);
     }
 
-    public abstract boolean isTheSameSpecies(Organism other);
+    public boolean isTheSameSpecies(Organism other) {
+        return this.name.equals(other.name);
+    }
 
     @Override
     public void action() {

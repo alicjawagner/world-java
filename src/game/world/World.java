@@ -1,17 +1,31 @@
 package game.world;
 
+import game.graphics.GamePanel;
 import game.organisms.Organism;
 import game.organisms.animals.*;
 import game.organisms.plants.*;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class World {
+public class World extends JPanel implements ActionListener {
 
+    static final int DELAY = 75;
+    char direction = 'R';
+    boolean running = false;
+    Timer timer;
+
+    public static final int TEXT_FIELD_HEIGHT = 100;
     public static final int BOARD_SIZE = 700;
     public static final int FIELD_SIZE = 35;
     public static final int FIELDS_NUMBER = (BOARD_SIZE / FIELD_SIZE); //20 - how many fields each dimension
+    public static final int SCREEN_WIDTH = BOARD_SIZE;
+    public static final int SCREEN_HEIGHT = BOARD_SIZE + TEXT_FIELD_HEIGHT;
     private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
 
     public Organism[][] board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
@@ -20,7 +34,13 @@ public class World {
     public ArrayList<Organism> organisms = new ArrayList<>();
     public ArrayList<Organism> toAdd = new ArrayList<>();
 
-    public World() {}
+    public World() {
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
+        this.setBackground(Color.black);
+        this.setFocusable(true);
+        this.addKeyListener(new World.MyKeyAdapter());
+        //startGame();
+    }
 
     public int getNumberOfBornOrganisms() {
         return numberOfBornOrganisms;
@@ -145,10 +165,6 @@ public class World {
         addOrganism(createOrganism(which));
     }
 
-    private void drawBoard() {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-
     private void prepareGame() {
         for (OrganismsNames org : OrganismsNames.values()) {
             for (int i = 0; i < INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES; i++) {
@@ -160,7 +176,7 @@ public class World {
             }
         }
 
-        drawBoard();
+        //drawWorld();
     }
 
     private int makeRound() {
@@ -186,12 +202,17 @@ public class World {
         }
         toAdd.clear();
 
-        drawBoard();
+        //drawWorld();
 
         return 1;
     }
 
     public void startGame() {
+
+        running = true;
+        timer = new Timer(DELAY,this);
+        timer.start();
+
         prepareGame();
         int ch = 1;
 
@@ -202,6 +223,98 @@ public class World {
             if (human == null) {
                 // "Game over :C. Good luck next time!"
                 break;
+            }
+        }
+    }
+
+    private void drawWorld(Graphics g) {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        if(running) {
+            for(int i = 0; i < SCREEN_HEIGHT/FIELD_SIZE ; i++) {
+                g.drawLine(i * FIELD_SIZE, 0, i * FIELD_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i * FIELD_SIZE, SCREEN_WIDTH, i * FIELD_SIZE);
+            }
+
+            // for each org draw it
+            //      g.setColor(new Color(45,180,0));
+            //      g.fillRect(x[i], y[i], FIELD_SIZE, FIELD_SIZE);
+
+            /*
+            g.setColor(Color.red);
+            g.setFont( new Font("Ink Free",Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+             */
+        }
+        else {
+            gameOver(g);
+        }
+    }
+
+    public void gameOver(Graphics g) {
+        /*
+        //Score
+        g.setColor(Color.red);
+        g.setFont( new Font("Ink Free",Font.BOLD, 40));
+        FontMetrics metrics1 = getFontMetrics(g.getFont());
+        g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+        //Game Over text
+        g.setColor(Color.red);
+        g.setFont( new Font("Ink Free",Font.BOLD, 75));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+         */
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if(running) {
+            /*
+            move();
+            checkApple();
+            checkCollisions();
+             */
+
+        }
+        else { //     gdzies dac ze running false
+            timer.stop();
+        }
+
+        repaint();
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawWorld(g);
+    }
+
+    public class MyKeyAdapter extends KeyAdapter {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch(e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if(direction != 'R') {
+                        direction = 'L';
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if(direction != 'L') {
+                        direction = 'R';
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if(direction != 'D') {
+                        direction = 'U';
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if(direction != 'U') {
+                        direction = 'D';
+                    }
+                    break;
             }
         }
     }

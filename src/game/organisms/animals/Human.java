@@ -101,8 +101,6 @@ public class Human extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(new Color(232,211,185));
-        g.fillRect(point.x * FIELD_SIZE, point.y *FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
-    /////////////////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(232,211,185), "H");
     }
 }

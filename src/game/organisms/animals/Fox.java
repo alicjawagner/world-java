@@ -35,6 +35,6 @@ public class Fox extends Animal {
 
     @Override
     public void draw(Graphics g) {
-    ////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(255,124,5), "F");
     }
 }

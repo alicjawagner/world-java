@@ -22,6 +22,6 @@ public class Sheep extends Animal {
 
     @Override
     public void draw(Graphics g) {
-    ///////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(211,211,211), "S");
     }
 }

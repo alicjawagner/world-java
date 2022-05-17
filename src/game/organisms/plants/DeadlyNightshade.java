@@ -26,6 +26,6 @@ public class DeadlyNightshade extends Plant {
 
     @Override
     public void draw(Graphics g) {
-    //////////////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(33,37,77), "N");
     }
 }

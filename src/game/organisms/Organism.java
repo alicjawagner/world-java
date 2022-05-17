@@ -7,6 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static game.world.World.FIELD_SIZE;
+
 public abstract class Organism {
 
     protected String name;
@@ -160,6 +162,19 @@ public abstract class Organism {
         int which = rand.nextInt(possibleFields.size());
         child.moveToField(possibleFields.get(which));
         world.insertIntoToAdd(child);
+    }
+
+    protected abstract void drawShapeOrg(Graphics g, Color color);
+
+    protected void drawOrg(Graphics g, Color color, String nameLetter) {
+        drawShapeOrg(g, color);
+
+        g.setColor(Color.white);
+        g.setFont( new Font("Helvetica", Font.BOLD, 25));
+        FontMetrics metrics = world.getFontMetrics(g.getFont());
+        double x = ((double)(2 * point.x + 1) * FIELD_SIZE) / 2;
+        double y = ((double)(2 * point.y + 2) * FIELD_SIZE) / 2;
+        g.drawString(nameLetter, (int)(x - (metrics.stringWidth(nameLetter) / 2)), (int)(y - (g.getFont().getSize() / 2)) + 4);
     }
 
     @Override

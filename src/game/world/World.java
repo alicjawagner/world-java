@@ -301,6 +301,7 @@ public class World extends JPanel implements ActionListener {
     }
 
     private void drawComments(Graphics g) {
+        g.setFont(new Font("Helvetica", Font.PLAIN, 12));
         g.setColor(new Color(13,15,17));
         int x = SCREEN_WIDTH - TEXT_FIELD_WIDTH;
         g.fillRect(x, 0, TEXT_FIELD_WIDTH, SCREEN_HEIGHT);

@@ -5,6 +5,8 @@ import game.world.World;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static game.world.World.FIELD_SIZE;
+
 public abstract class Plant extends Organism {
 
     private static final int PROBABILITY_OF_SPREADING = 15;
@@ -30,5 +32,11 @@ public abstract class Plant extends Organism {
     @Override
     public void writeIDie() {
         world.text += name + " was eaten :(\n";
+    }
+
+    @Override
+    protected void drawShapeOrg(Graphics g, Color color) {
+        g.setColor(color);
+        g.fillRect(point.x * FIELD_SIZE, point.y *FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
     }
 }

@@ -36,6 +36,6 @@ public class Guarana extends Plant {
 
     @Override
     public void draw(Graphics g) {
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(126,200,80), "U");
     }
 }

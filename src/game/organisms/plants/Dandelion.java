@@ -27,6 +27,6 @@ public class Dandelion extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        ///////////////////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(245,187,0), "D");
     }
 }

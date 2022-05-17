@@ -5,6 +5,8 @@ import game.world.World;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static game.world.World.FIELD_SIZE;
+
 public abstract class Animal extends Organism {
 
     public Animal(World _world) {
@@ -68,6 +70,12 @@ public abstract class Animal extends Organism {
 
         makeChild(forChild);
         world.text += name + " child - parents: (" + point.x + "," + point.y + ") & (" + attacked.getPoint().x + "," + attacked.getPoint().y + ")\n";
+    }
+
+    @Override
+    protected void drawShapeOrg(Graphics g, Color color) {
+        g.setColor(color);
+        g.fillOval(point.x * FIELD_SIZE, point.y *FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
     }
 
 }

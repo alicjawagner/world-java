@@ -41,6 +41,6 @@ public class Turtle extends Animal {
 
     @Override
     public void draw(Graphics g) {
-    ///////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(138,154,91), "T");
     }
 }

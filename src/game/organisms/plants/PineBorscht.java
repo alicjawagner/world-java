@@ -42,6 +42,6 @@ public class PineBorscht extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        ///////////////////////////////////////////////////////////////////////////////////////////////
+        drawOrg(g, new Color(204,235,68), "B");
     }
 }

@@ -5,17 +5,18 @@ import game.world.OrganismsNames;
 import game.world.World;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Human extends Animal {
 
-    static final int START_POTION = 5;
-    static final int COUNTDOWN_POTION = 10;
+    public static final int START_POTION = 5;
+    public static final int COUNTDOWN_POTION = 10;
 
     private NextMove nextMove = NextMove.STAY;
     private int potionWorking = 0;
     private int potionCountdown = 0;
 
-    private enum NextMove {
+    public enum NextMove {
         UP,
         DOWN,
         RIGHT,
@@ -28,6 +29,14 @@ public class Human extends Animal {
         name = "Human";
         strength = 5;
         initiative = 4;
+    }
+
+    public int getPotionCountdown() {
+        return potionCountdown;
+    }
+
+    public void setNextMove(final NextMove _nextMove) {
+        nextMove = _nextMove;
     }
 
     public void startElixir() {
@@ -75,6 +84,30 @@ public class Human extends Animal {
             makeMoveOrCollision(newPoint);
     }
 
+//    public void getKeyPressed(KeyEvent e) {
+//        switch(e.getKeyCode()) {
+//            case KeyEvent.VK_E:
+//                if (potionCountdown == 0)
+//                    startElixir();
+//                nextMove = NextMove.STAY;
+//                break;
+//            case KeyEvent.VK_LEFT:
+//                nextMove = NextMove.LEFT;
+//                break;
+//            case KeyEvent.VK_RIGHT:
+//                nextMove = NextMove.RIGHT;
+//                break;
+//            case KeyEvent.VK_UP:
+//                nextMove = NextMove.UP;
+//                break;
+//            case KeyEvent.VK_DOWN:
+//                nextMove = NextMove.DOWN;
+//                break;
+//            default:
+//                nextMove = NextMove.STAY;
+//        }
+//    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.HUMAN;
@@ -85,39 +118,3 @@ public class Human extends Animal {
     /////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
-
-/*
-int Czlowiek::wczytajStrzalki() {
-    int ch = _getch();
-    if (ch == ESC)
-        return ESC;
-    else if (ch == 0 || ch == 224) {
-        switch (_getch()) {
-        case GORA:
-            nastepnyRuch = GORA;
-            break;
-        case DOL:
-            nastepnyRuch = DOL;
-            break;
-        case LEWO:
-            nastepnyRuch = LEWO;
-            break;
-        case PRAWO:
-            nastepnyRuch = PRAWO;
-            break;
-        }
-    }
-    else if (ch == ELIKSIR) {
-        if (odliczanieDoWlaczeniaEliksiru == 0) {
-            nastepnyRuch = ZOSTAN;
-            return ELIKSIR;
-        }
-        else
-            nastepnyRuch = ZOSTAN;
-    }
-    else
-        nastepnyRuch = ZOSTAN;
-
-    return 1;
-}
- */

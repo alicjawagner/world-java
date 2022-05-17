@@ -8,9 +8,6 @@ import game.world.World;
 public class Main {
 
     public static void main(String[] args) {
-        //new GameFrame();
-        World world = new World();
-        world.prepareGame();
-        world.makeRound();
+        new GameFrame();
     }
 }

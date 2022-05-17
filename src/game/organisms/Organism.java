@@ -16,7 +16,7 @@ public abstract class Organism {
     protected int birthTime;
     protected boolean isAlive;
     protected int stepRange;
-    protected World world = new World();
+    protected World world;
     protected Random rand = new Random();
 
     public Organism(World _world) {

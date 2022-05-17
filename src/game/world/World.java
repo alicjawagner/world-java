@@ -15,10 +15,9 @@ import java.util.ArrayList;
 
 public class World extends JPanel implements ActionListener {
 
-    static final int DELAY = 75;
-    char direction = 'R';
-    boolean running = false;
-    Timer timer;
+    //static final int DELAY = 75;
+    //boolean running = false;
+    //Timer timer;
 
     public static final int TEXT_FIELD_HEIGHT = 100;
     public static final int BOARD_SIZE = 700;
@@ -39,7 +38,7 @@ public class World extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new World.MyKeyAdapter());
-        //startGame();
+        startGame();
     }
 
     public int getNumberOfBornOrganisms() {
@@ -170,7 +169,30 @@ public class World extends JPanel implements ActionListener {
         addOrganism(createOrganism(which));
     }
 
-    public void prepareGame() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////tu sie zaczyna grafika/////////////////////////////////////////////////////////////////////////
+    public void startGame() {
+
+        //running = true;
+        //timer = new Timer(DELAY,this);
+        //timer.start();
+
+        prepareGame();
+
+        //int ch = 1;
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // "Let's start the game!\n"
+        // jak uzywac: strzalkli, eliksir (+5 do Twojej sily)
+//        while (ch != -1) { //ch != ESC
+//            ch = nextRound();
+//            if (human == null) {
+//                // "Game over :C. Good luck next time!"
+//                break;
+//            }
+//        }
+    }
+
+    private void prepareGame() {
         for (OrganismsNames org : OrganismsNames.values()) {
             for (int i = 0; i < INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES; i++) {
                 if (org == OrganismsNames.HUMAN) {
@@ -180,44 +202,38 @@ public class World extends JPanel implements ActionListener {
                 createAndAddOrganism(org);
             }
         }
-
+        printBoardInConsole();
+        //repaint();
         //drawWorld();
     }
 
-    public int makeRound() {
-        /*
-        int klawisz = human.wczytajStrzalki();
+    private void nextRound() {
 
-        if (klawisz == ESC)
-            return ESC;
-        if (klawisz == ELIKSIR)
-            human.startElixir();
-        */
-//        for (Organism o : organisms) {
-//            if (o.getIsAlive())
-//                o.action();
-//        }
-//
-//        removeDead();
-//
-//        // add waiting organisms to main ArrayList
-//        for (Organism o : toAdd) {
-//            addOrganism(o);
-//            o.setBirthTime(numberOfBornOrganisms);
-//        }
-//        toAdd.clear();
-//
-//        //drawWorld();
-//
-//        return 1;
         for (Organism o : organisms) {
-            if (o.getIsAlive()) {
+            if (o.getIsAlive())
                 o.action();
-                printBoardInConsole();
-            }
         }
+
+        removeDead();
+
+        // add waiting organisms to main ArrayList
+        for (Organism o : toAdd) {
+            addOrganism(o);
+            o.setBirthTime(numberOfBornOrganisms);
+        }
+        toAdd.clear();
+
+        //drawWorld();
+        //repaint();
+
+//        for (Organism o : organisms) {
+//            if (o.getIsAlive()) {
+//                o.action();
+//                printBoardInConsole();
+//            }
+//        }
         printBoardInConsole();
-        return 1;
+//        return 1;
     }
 
     public void printBoardInConsole() {
@@ -236,29 +252,9 @@ public class World extends JPanel implements ActionListener {
         }
     }
 
-    public void startGame() {
-
-        running = true;
-        timer = new Timer(DELAY,this);
-        timer.start();
-
-        prepareGame();
-        int ch = 1;
-
-        // "Let's start the game!\n"
-        // jak uzywac: strzalkli, eliksir (+5 do Twojej sily)
-        while (ch != -1) { //ch != ESC
-            ch = makeRound();
-            if (human == null) {
-                // "Game over :C. Good luck next time!"
-                break;
-            }
-        }
-    }
-
     private void drawWorld(Graphics g) {
         ////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(running) {
+        if(human != null) {
             for(int i = 0; i < SCREEN_HEIGHT/FIELD_SIZE ; i++) {
                 g.drawLine(i * FIELD_SIZE, 0, i * FIELD_SIZE, SCREEN_HEIGHT);
                 g.drawLine(0, i * FIELD_SIZE, SCREEN_WIDTH, i * FIELD_SIZE);
@@ -298,19 +294,19 @@ public class World extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(running) {
-            /*
-            move();
-            checkApple();
-            checkCollisions();
-             */
-
-        }
-        else { //     gdzies dac ze running false
-            timer.stop();
-        }
-
-        repaint();
+//        if(running) {
+//            /*
+//            move();
+//            checkApple();
+//            checkCollisions();
+//             */
+//
+//        }
+//        else { //     gdzies dac ze running false
+//            timer.stop();
+//        }
+//
+//        repaint();
     }
 
     @Override
@@ -320,29 +316,28 @@ public class World extends JPanel implements ActionListener {
     }
 
     public class MyKeyAdapter extends KeyAdapter {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         @Override
         public void keyPressed(KeyEvent e) {
             switch(e.getKeyCode()) {
+                case KeyEvent.VK_E:
+                    if (human.getPotionCountdown() == 0)
+                        human.startElixir();
+                    human.setNextMove(Human.NextMove.STAY);
+                    break;
                 case KeyEvent.VK_LEFT:
-                    if(direction != 'R') {
-                        direction = 'L';
-                    }
+                    human.setNextMove(Human.NextMove.LEFT);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if(direction != 'L') {
-                        direction = 'R';
-                    }
+                    human.setNextMove(Human.NextMove.RIGHT);
                     break;
                 case KeyEvent.VK_UP:
-                    if(direction != 'D') {
-                        direction = 'U';
-                    }
+                    human.setNextMove(Human.NextMove.UP);
                     break;
                 case KeyEvent.VK_DOWN:
-                    if(direction != 'U') {
-                        direction = 'D';
-                    }
+                    human.setNextMove(Human.NextMove.DOWN);
+                    break;
+                case KeyEvent.VK_N:
+                    nextRound();
                     break;
             }
         }

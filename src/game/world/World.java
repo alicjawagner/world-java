@@ -28,7 +28,7 @@ public class World extends JPanel implements ActionListener {
     public static final int SCREEN_HEIGHT = BOARD_SIZE;
     private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
     private static final String INSTRUCTIONS = "MOVEMENT:                                    arrows\n" +
-                                                "MAGIC POTION (strength +5):      E\n" +
+                                                "MAGIC POTION (strength +5):      P\n" +
                                                 "NEW ROUND:                                 N\n\n";
 
     public String text = INSTRUCTIONS;
@@ -323,10 +323,6 @@ public class World extends JPanel implements ActionListener {
         g.setColor(new Color(0,0,0, 170));
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-//        g.setColor(new Color(0,0,0, 180));
-//        g.fillRect((SCREEN_WIDTH - metrics2.stringWidth(gameOver))/2 - 10, (SCREEN_HEIGHT - g.getFont().getSize())/2 - 20,
-//                metrics2.stringWidth(gameOver) + 20, g.getFont().getSize() + 15);
-
         g.setColor(Color.red);
         g.drawString(gameOver, (SCREEN_WIDTH - metrics2.stringWidth(gameOver))/2, SCREEN_HEIGHT/2);
     }
@@ -360,7 +356,7 @@ public class World extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             if (human != null) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_E:
+                    case KeyEvent.VK_P:
                         human.startElixir();
                         human.setNextMove(Human.NextMove.STAY);
                         break;

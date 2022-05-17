@@ -12,6 +12,7 @@ public abstract class Animal extends Organism {
     }
 
     public boolean isTheSameSpecies(Organism other) {
+        if (other == null) return false;
         return this.name.equals(other.name);
     }
 

@@ -12,11 +12,11 @@ public abstract class Organism {
     protected String name;
     protected int strength;
     protected int initiative;
-    protected Point point;
+    protected Point point = new Point();
     protected int birthTime;
     protected boolean isAlive;
     protected int stepRange;
-    protected World world;
+    protected World world = new World();
     protected Random rand = new Random();
 
     public Organism(World _world) {
@@ -164,5 +164,10 @@ public abstract class Organism {
         int which = rand.nextInt(possibleFields.size());
         child.moveToField(possibleFields.get(which));
         world.insertIntoToAdd(child);
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + point.x + "," + point.y + ")";
     }
 }

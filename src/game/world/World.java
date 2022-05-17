@@ -68,17 +68,22 @@ public class World extends JPanel implements ActionListener {
     }
 
     public Organism findOnField(final Point point) {
-        Organism org = searchArrayList(point, organisms);
-        if (org != null)
-            return org;
 
-        org = searchArrayList(point, toAdd);
-        return org;
+        return board[point.x][point.y];
+
+//        Organism org = searchArrayList(point, organisms);
+//        if (org != null)
+//            return org;
+//
+//        org = searchArrayList(point, toAdd);
+//        return org;
     }
 
     private void removeDead() {
-        organisms.removeIf(o -> (!o.getIsAlive()));
-        toAdd.removeIf(o -> (!o.getIsAlive()));
+        if (organisms.size() != 0 )
+            organisms.removeIf(o -> (!o.getIsAlive()));
+        if (toAdd.size() != 0)
+            toAdd.removeIf(o -> (!o.getIsAlive()));
     }
 
     /**
@@ -165,7 +170,7 @@ public class World extends JPanel implements ActionListener {
         addOrganism(createOrganism(which));
     }
 
-    private void prepareGame() {
+    public void prepareGame() {
         for (OrganismsNames org : OrganismsNames.values()) {
             for (int i = 0; i < INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES; i++) {
                 if (org == OrganismsNames.HUMAN) {
@@ -179,7 +184,7 @@ public class World extends JPanel implements ActionListener {
         //drawWorld();
     }
 
-    private int makeRound() {
+    public int makeRound() {
         /*
         int klawisz = human.wczytajStrzalki();
 
@@ -188,23 +193,47 @@ public class World extends JPanel implements ActionListener {
         if (klawisz == ELIKSIR)
             human.startElixir();
         */
+//        for (Organism o : organisms) {
+//            if (o.getIsAlive())
+//                o.action();
+//        }
+//
+//        removeDead();
+//
+//        // add waiting organisms to main ArrayList
+//        for (Organism o : toAdd) {
+//            addOrganism(o);
+//            o.setBirthTime(numberOfBornOrganisms);
+//        }
+//        toAdd.clear();
+//
+//        //drawWorld();
+//
+//        return 1;
         for (Organism o : organisms) {
-            if (o.getIsAlive())
+            if (o.getIsAlive()) {
                 o.action();
+                printBoardInConsole();
+            }
         }
-
-        removeDead();
-
-        // add waiting organisms to main ArrayList
-        for (Organism o : toAdd) {
-            addOrganism(o);
-            o.setBirthTime(numberOfBornOrganisms);
-        }
-        toAdd.clear();
-
-        //drawWorld();
-
+        printBoardInConsole();
         return 1;
+    }
+
+    public void printBoardInConsole() {
+        for (Organism o : organisms) {
+            System.out.println(o);
+        }
+        System.out.println();
+        for (Organism[] row : board) {
+            for (Organism o : row) {
+                if (o == null)
+                    System.out.print("_");
+                else
+                    System.out.print("x");
+            }
+            System.out.println();
+        }
     }
 
     public void startGame() {

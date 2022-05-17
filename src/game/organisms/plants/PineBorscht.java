@@ -34,7 +34,7 @@ public class PineBorscht extends Plant {
                     continue;
 
                 toKill = new Point(point.x + i, point.y + j);
-                if (!world.isFieldInBoard(toKill))
+                if (!world.isFieldInBoard(toKill) || world.isFieldUnoccupied(toKill))
                     continue;
 
                 if (world.whatIsOnBoard(toKill).isAnimal()) {

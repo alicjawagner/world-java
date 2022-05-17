@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class World extends JPanel implements ActionListener {
 
@@ -215,6 +216,8 @@ public class World extends JPanel implements ActionListener {
 
     private void nextRound() {
         text = INSTRUCTIONS;
+        if (human != null)
+            human.resetPotionText();
 
         for (Organism o : organisms) {
             if (o.getIsAlive())
@@ -299,6 +302,10 @@ public class World extends JPanel implements ActionListener {
         int x = SCREEN_WIDTH - TEXT_FIELD_WIDTH;
         g.fillRect(x, 0, TEXT_FIELD_WIDTH, SCREEN_HEIGHT);
         drawTextWithNewLines(g, text, x + 5, 3);
+
+        String humanText = human.getPotionText();
+        if (!Objects.equals(humanText, ""))
+            g.drawString(humanText, x + 5, SCREEN_HEIGHT - 20);
     }
 
     public void gameOver(Graphics g) {
@@ -338,8 +345,7 @@ public class World extends JPanel implements ActionListener {
             if (human != null) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_E:
-                        if (human.getPotionCountdown() == 0)
-                            human.startElixir();
+                        human.startElixir();
                         human.setNextMove(Human.NextMove.STAY);
                         break;
                     case KeyEvent.VK_LEFT:

@@ -15,6 +15,7 @@ public class Human extends Animal {
     private NextMove nextMove = NextMove.STAY;
     private int potionWorking = 0;
     private int potionCountdown = 0;
+    private String potionText = "";
 
     public enum NextMove {
         UP,
@@ -40,10 +41,14 @@ public class Human extends Animal {
     }
 
     public void startElixir() {
-        world.text += "Magic potion increased your strength by 5!\n";
-        potionWorking = START_POTION;
-        potionCountdown = COUNTDOWN_POTION;
-        strength += 5;
+        if (potionCountdown == 0) {
+            potionText = "Magic potion increased your strength by 5!\n";
+            potionWorking = START_POTION;
+            potionCountdown = COUNTDOWN_POTION;
+            strength += 5;
+        }
+        else
+            potionText = "You can't drink the potion yet.\n";
     }
 
     private void countDownPotion() {
@@ -54,8 +59,6 @@ public class Human extends Animal {
         }
         else if (potionCountdown > 0)
             potionCountdown--;
-
-        world.text += "You can't drink the potion yet.\n";
     }
 
     @Override
@@ -82,33 +85,17 @@ public class Human extends Animal {
             makeMoveOrCollision(newPoint);
     }
 
-//    public void getKeyPressed(KeyEvent e) {
-//        switch(e.getKeyCode()) {
-//            case KeyEvent.VK_E:
-//                if (potionCountdown == 0)
-//                    startElixir();
-//                nextMove = NextMove.STAY;
-//                break;
-//            case KeyEvent.VK_LEFT:
-//                nextMove = NextMove.LEFT;
-//                break;
-//            case KeyEvent.VK_RIGHT:
-//                nextMove = NextMove.RIGHT;
-//                break;
-//            case KeyEvent.VK_UP:
-//                nextMove = NextMove.UP;
-//                break;
-//            case KeyEvent.VK_DOWN:
-//                nextMove = NextMove.DOWN;
-//                break;
-//            default:
-//                nextMove = NextMove.STAY;
-//        }
-//    }
-
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.HUMAN;
+    }
+
+    public String getPotionText() {
+        return potionText;
+    }
+
+    public void resetPotionText() {
+        potionText = "";
     }
 
     @Override

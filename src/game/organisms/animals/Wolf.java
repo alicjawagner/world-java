@@ -4,6 +4,8 @@ import game.organisms.Animal;
 import game.world.OrganismsNames;
 import game.world.World;
 
+import java.awt.*;
+
 public class Wolf extends Animal {
 
     public Wolf(World _world) {
@@ -19,7 +21,7 @@ public class Wolf extends Animal {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
     ////////////////////////////////////////////////////////////////////////////
     }
 }

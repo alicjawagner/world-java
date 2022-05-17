@@ -34,7 +34,7 @@ public class Fox extends Animal {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
     ////////////////////////////////////////////////////////////////////////
     }
 }

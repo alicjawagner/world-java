@@ -20,11 +20,6 @@ public class PineBorscht extends Plant {
     }
 
     @Override
-    public void draw() {
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-    }
-
-    @Override
     public void action() {
         //kills all the nearest animals
         Point toKill;
@@ -43,5 +38,10 @@ public class PineBorscht extends Plant {
                 }
             }
         }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        ///////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

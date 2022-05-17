@@ -67,7 +67,7 @@ public class Antelope extends Animal {
     }
 
     @Override
-    public void draw() {
-
+    public void draw(Graphics g) {
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

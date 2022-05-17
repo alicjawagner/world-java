@@ -4,6 +4,8 @@ import game.organisms.Plant;
 import game.world.OrganismsNames;
 import game.world.World;
 
+import java.awt.*;
+
 public class DeadlyNightshade extends Plant {
 
     public DeadlyNightshade(World _world) {
@@ -23,7 +25,7 @@ public class DeadlyNightshade extends Plant {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
     //////////////////////////////////////////////////////////////////////////////////////////
     }
 }

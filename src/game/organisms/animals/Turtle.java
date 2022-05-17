@@ -5,6 +5,8 @@ import game.organisms.Organism;
 import game.world.OrganismsNames;
 import game.world.World;
 
+import java.awt.*;
+
 public class Turtle extends Animal {
 
     static final int PROBABILITY_NOT_MOVING = 75;
@@ -38,7 +40,7 @@ public class Turtle extends Animal {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
     ///////////////////////////////////////////////////////////////////////////
     }
 }

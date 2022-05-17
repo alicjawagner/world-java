@@ -5,7 +5,8 @@ import game.world.OrganismsNames;
 import game.world.World;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
+
+import static game.world.World.FIELD_SIZE;
 
 public class Human extends Animal {
 
@@ -42,13 +43,13 @@ public class Human extends Animal {
 
     public void startElixir() {
         if (potionCountdown == 0) {
-            potionText = "Magic potion increased your strength by 5!\n";
+            potionText = "Magic potion increased your strength by 5!";
             potionWorking = START_POTION;
             potionCountdown = COUNTDOWN_POTION;
             strength += 5;
         }
         else
-            potionText = "You can't drink the potion yet.\n";
+            potionText = "You can't drink the potion yet.";
     }
 
     private void countDownPotion() {
@@ -71,13 +72,13 @@ public class Human extends Animal {
 
         Point newPoint = new Point(point);
         if (nextMove == NextMove.UP)
-            newPoint.x = point.x - 1;
-        else if (nextMove == NextMove.DOWN)
-            newPoint.x = point.x + 1;
-        else if (nextMove == NextMove.LEFT)
             newPoint.y = point.y - 1;
-        else if (nextMove == NextMove.RIGHT)
+        else if (nextMove == NextMove.DOWN)
             newPoint.y = point.y + 1;
+        else if (nextMove == NextMove.LEFT)
+            newPoint.x = point.x - 1;
+        else if (nextMove == NextMove.RIGHT)
+            newPoint.x = point.x + 1;
         else if (nextMove == NextMove.STAY)
             return;
 
@@ -99,7 +100,9 @@ public class Human extends Animal {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
+        g.setColor(new Color(232,211,185));
+        g.fillRect(point.x * FIELD_SIZE, point.y *FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
     /////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

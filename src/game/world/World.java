@@ -211,7 +211,6 @@ public class World extends JPanel implements ActionListener {
         }
         printBoardInConsole();
         repaint();
-        //drawWorld();
     }
 
     private void nextRound() {
@@ -282,6 +281,10 @@ public class World extends JPanel implements ActionListener {
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
          */
+        //human.draw(g);
+        for (Organism o : organisms) {
+            o.draw(g);
+        }
 
         drawComments(g);
 
@@ -303,9 +306,11 @@ public class World extends JPanel implements ActionListener {
         g.fillRect(x, 0, TEXT_FIELD_WIDTH, SCREEN_HEIGHT);
         drawTextWithNewLines(g, text, x + 5, 3);
 
-        String humanText = human.getPotionText();
-        if (!Objects.equals(humanText, ""))
-            g.drawString(humanText, x + 5, SCREEN_HEIGHT - 20);
+        if (human != null) {
+            String humanText = human.getPotionText();
+            if (!Objects.equals(humanText, ""))
+                g.drawString(humanText, x + 5, SCREEN_HEIGHT - 20);
+        }
     }
 
     public void gameOver(Graphics g) {

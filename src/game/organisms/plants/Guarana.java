@@ -5,6 +5,8 @@ import game.organisms.Plant;
 import game.world.OrganismsNames;
 import game.world.World;
 
+import java.awt.*;
+
 public class Guarana extends Plant {
 
     public Guarana(World _world) {
@@ -33,7 +35,7 @@ public class Guarana extends Plant {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

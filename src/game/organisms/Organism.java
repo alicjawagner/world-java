@@ -41,7 +41,7 @@ public abstract class Organism {
 
     public abstract OrganismsNames whoAmI();
     public abstract void action();
-    public abstract void draw();
+    public abstract void draw(Graphics g);
 
     public String getName() {
         return name;

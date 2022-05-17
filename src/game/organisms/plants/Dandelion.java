@@ -4,6 +4,8 @@ import game.organisms.Plant;
 import game.world.OrganismsNames;
 import game.world.World;
 
+import java.awt.*;
+
 public class Dandelion extends Plant {
 
     public Dandelion(World _world) {
@@ -24,7 +26,7 @@ public class Dandelion extends Plant {
     }
 
     @Override
-    public void draw() {
+    public void draw(Graphics g) {
         ///////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

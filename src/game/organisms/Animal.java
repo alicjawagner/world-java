@@ -40,8 +40,7 @@ public abstract class Animal extends Organism {
             reproduce(attacked);
         }
         else if (attacked.ifIRepelledTheAttack(this)) {
-            ///////////////////////////////////////////////////////////////////////////////
-            // name + " returned to the previous place :/\n"
+            world.text += name + " returned :/\n";
         }
         else if (attacked.ifIEscaped(this)) {
             return;
@@ -68,8 +67,7 @@ public abstract class Animal extends Organism {
             return;
 
         makeChild(forChild);
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // "child - parents: " + name + " x2 on fields (" + point.x + "," + point.y + ") & (" + attacked.getPoint().x + "," + attacked.getPoint().y + ")\n"
+        world.text += name + " child - parents: (" + point.x + "," + point.y + ") & (" + attacked.getPoint().x + "," + attacked.getPoint().y + ")\n";
     }
 
 }

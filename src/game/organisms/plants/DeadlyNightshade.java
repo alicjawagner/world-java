@@ -19,8 +19,7 @@ public class DeadlyNightshade extends Plant {
 
     @Override
     public void writeIWon() {
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        // name + " (" + point.x + "," + point.y + ") are the cause of poisoning: "
+        world.text += this + " poison: ";
     }
 
     @Override

@@ -29,7 +29,6 @@ public abstract class Plant extends Organism {
 
     @Override
     public void writeIDie() {
-        ///////////////////////////////////////////////////////////////////////////////////////
-        //cout << name + " was eaten :(\n";
+        world.text += name + " was eaten :(\n";
     }
 }

@@ -36,8 +36,7 @@ public class Antelope extends Animal {
             putOnBoard();
             point = newPoint;
 
-            /////////////////////////////////////////////////////////////////////////////////////////
-            // name + " (" + point.x + "," + point.y + ") escaped the fight ;) on field (" + attacker.getPoint().x + "," + attacker.getPoint().y + ")\n"
+            world.text += this + " escaped the fight ;) on field (" + attacker.getPoint().x + "," + attacker.getPoint().y + ")\n";
             return true;
         }
         return false;
@@ -57,8 +56,7 @@ public class Antelope extends Animal {
             point = myOld;
             removeOccupiedFields(possibleMoves);
             moveToRandField(possibleMoves);
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // name + " (" + point.x + "," + point.y + ") escaped the fight ;) on field (" + attacked.getPoint().x + "," + attacked.getPoint().y + ")\n"
+            world.text += this + " escaped the fight ;) on field (" + attacked.getPoint().x + "," + attacked.getPoint().y + ")\n";
         } else
             super.collision(attacked);
     }

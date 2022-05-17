@@ -19,14 +19,18 @@ public class World extends JPanel implements ActionListener {
     //boolean running = false;
     //Timer timer;
 
-    public static final int TEXT_FIELD_HEIGHT = 100;
+    public static final int TEXT_FIELD_WIDTH = 303;
     public static final int BOARD_SIZE = 700;
     public static final int FIELD_SIZE = 35;
     public static final int FIELDS_NUMBER = (BOARD_SIZE / FIELD_SIZE); //20 - how many fields each dimension
-    public static final int SCREEN_WIDTH = BOARD_SIZE;
-    public static final int SCREEN_HEIGHT = BOARD_SIZE + TEXT_FIELD_HEIGHT;
+    public static final int SCREEN_WIDTH = BOARD_SIZE + TEXT_FIELD_WIDTH;
+    public static final int SCREEN_HEIGHT = BOARD_SIZE;
     private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
+    private static final String INSTRUCTIONS = "MOVEMENT:                                    arrows\n" +
+                                                "MAGIC POTION (strength +5):      E\n" +
+                                                "NEW ROUND:                                 N\n\n";
 
+    public String text = INSTRUCTIONS;
     public Organism[][] board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
     private int numberOfBornOrganisms = 0;
     private Human human = null;
@@ -83,6 +87,8 @@ public class World extends JPanel implements ActionListener {
             organisms.removeIf(o -> (!o.getIsAlive()));
         if (toAdd.size() != 0)
             toAdd.removeIf(o -> (!o.getIsAlive()));
+        if (human != null && !human.getIsAlive())
+            human = null;
     }
 
     /**
@@ -203,11 +209,12 @@ public class World extends JPanel implements ActionListener {
             }
         }
         printBoardInConsole();
-        //repaint();
+        repaint();
         //drawWorld();
     }
 
     private void nextRound() {
+        text = INSTRUCTIONS;
 
         for (Organism o : organisms) {
             if (o.getIsAlive())
@@ -245,6 +252,8 @@ public class World extends JPanel implements ActionListener {
             for (Organism o : row) {
                 if (o == null)
                     System.out.print("_");
+                else if (o == human)
+                    System.out.print("h");
                 else
                     System.out.print("x");
             }
@@ -254,41 +263,49 @@ public class World extends JPanel implements ActionListener {
 
     private void drawWorld(Graphics g) {
         ////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(human != null) {
-            for(int i = 0; i < SCREEN_HEIGHT/FIELD_SIZE ; i++) {
-                g.drawLine(i * FIELD_SIZE, 0, i * FIELD_SIZE, SCREEN_HEIGHT);
-                g.drawLine(0, i * FIELD_SIZE, SCREEN_WIDTH, i * FIELD_SIZE);
-            }
 
-            // for each org draw it
-            //      g.setColor(new Color(45,180,0));
-            //      g.fillRect(x[i], y[i], FIELD_SIZE, FIELD_SIZE);
-
-            /*
-            g.setColor(Color.red);
-            g.setFont( new Font("Ink Free",Font.BOLD, 40));
-            FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-             */
+        for(int i = 0; i < SCREEN_HEIGHT/FIELD_SIZE ; i++) {
+            g.drawLine(i * FIELD_SIZE, 0, i * FIELD_SIZE, SCREEN_HEIGHT);
+            g.drawLine(0, i * FIELD_SIZE, SCREEN_WIDTH, i * FIELD_SIZE);
         }
-        else {
+
+        // for each org draw it
+        //      g.setColor(new Color(45,180,0));
+        //      g.fillRect(x[i], y[i], FIELD_SIZE, FIELD_SIZE);
+
+        /*
+        g.setColor(Color.red);
+        g.setFont( new Font("Ink Free",Font.BOLD, 40));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+         */
+
+        drawComments(g);
+
+        if(human == null) {
             gameOver(g);
         }
+        repaint();
+    }
+
+    private void drawTextWithNewLines(Graphics g, String text, int x, int y) {
+        g.setColor(Color.white);
+        for (String line : text.split("\n"))
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
+    }
+
+    private void drawComments(Graphics g) {
+        g.setColor(new Color(13,15,17));
+        int x = SCREEN_WIDTH - TEXT_FIELD_WIDTH;
+        g.fillRect(x, 0, TEXT_FIELD_WIDTH, SCREEN_HEIGHT);
+        drawTextWithNewLines(g, text, x + 5, 3);
     }
 
     public void gameOver(Graphics g) {
-        /*
-        //Score
         g.setColor(Color.red);
-        g.setFont( new Font("Ink Free",Font.BOLD, 40));
-        FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-        //Game Over text
-        g.setColor(Color.red);
-        g.setFont( new Font("Ink Free",Font.BOLD, 75));
+        g.setFont( new Font("Times New Roman",Font.BOLD, 45));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
         g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
-         */
     }
 
     @Override
@@ -318,27 +335,29 @@ public class World extends JPanel implements ActionListener {
     public class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            switch(e.getKeyCode()) {
-                case KeyEvent.VK_E:
-                    if (human.getPotionCountdown() == 0)
-                        human.startElixir();
-                    human.setNextMove(Human.NextMove.STAY);
-                    break;
-                case KeyEvent.VK_LEFT:
-                    human.setNextMove(Human.NextMove.LEFT);
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    human.setNextMove(Human.NextMove.RIGHT);
-                    break;
-                case KeyEvent.VK_UP:
-                    human.setNextMove(Human.NextMove.UP);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    human.setNextMove(Human.NextMove.DOWN);
-                    break;
-                case KeyEvent.VK_N:
-                    nextRound();
-                    break;
+            if (human != null) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_E:
+                        if (human.getPotionCountdown() == 0)
+                            human.startElixir();
+                        human.setNextMove(Human.NextMove.STAY);
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        human.setNextMove(Human.NextMove.LEFT);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        human.setNextMove(Human.NextMove.RIGHT);
+                        break;
+                    case KeyEvent.VK_UP:
+                        human.setNextMove(Human.NextMove.UP);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        human.setNextMove(Human.NextMove.DOWN);
+                        break;
+                    case KeyEvent.VK_N:
+                        nextRound();
+                        break;
+                }
             }
         }
     }

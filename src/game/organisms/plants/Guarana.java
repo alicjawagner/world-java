@@ -24,9 +24,7 @@ public class Guarana extends Plant {
 
     @Override
     public void writeIDie() {
-        //////////////////////////////////////////////////////////////////////////
-        // not print line
-        // name + " is dead :( (but the strength of the animal increased by 3)\n"
+        world.text += name + " is dead :( (+3)\n";
     }
 
     @Override

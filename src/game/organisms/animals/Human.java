@@ -40,8 +40,7 @@ public class Human extends Animal {
     }
 
     public void startElixir() {
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // "Magic potion increased your strength by 5!\n"
+        world.text += "Magic potion increased your strength by 5!\n";
         potionWorking = START_POTION;
         potionCountdown = COUNTDOWN_POTION;
         strength += 5;
@@ -56,8 +55,7 @@ public class Human extends Animal {
         else if (potionCountdown > 0)
             potionCountdown--;
 
-        //////////////////////////////////////////////////////////////////////////////////////////////
-        // "You can't drink the potion yet.\n"
+        world.text += "You can't drink the potion yet.\n";
     }
 
     @Override

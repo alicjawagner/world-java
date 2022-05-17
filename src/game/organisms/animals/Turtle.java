@@ -19,8 +19,7 @@ public class Turtle extends Animal {
     @Override
     public boolean ifIRepelledTheAttack(final Organism attacker) {
         if (attacker.getStrength() < 5) {
-            ////////////////////////////////////////////////////////////////////////////////////////
-            // name + " (" + point.x + "," + point.y + ") repelled the attack: "
+            world.text += this + " repelled the attack: ";
             return true;
         }
         return false;

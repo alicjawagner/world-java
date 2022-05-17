@@ -38,8 +38,7 @@ public class PineBorscht extends Plant {
                     continue;
 
                 if (world.whatIsOnBoard(toKill).isAnimal()) {
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////
-                    //cout << "Pine Borscht (" + point.x << ", " << point.y << ") has no mercy: ";
+                    world.text += this + " has no mercy: ";
                     world.findOnField(toKill).die();
                 }
             }

@@ -141,15 +141,11 @@ public abstract class Organism {
     }
 
     public void writeIWon() {
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        // change to some string to be shown, not print line
-        //System.out.println(name + " (" + point.x + "," + point.y + ") won the fight: ");
+        world.text += this + " won the fight: ";
     }
 
     public void writeIDie() {
-        //////////////////////////////////////////////////////////////////////////
-        // not print line
-        //System.out.println(name + " is dead :(\n");
+        world.text += name + " is dead :(\n";
     }
 
     public void die() {

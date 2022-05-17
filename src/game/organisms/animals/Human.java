@@ -101,6 +101,19 @@ public class Human extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(232,211,185), "H");
+        //drawOrg(g, new Color(232,211,185), "H");
+        drawOrg(g, Color.red, "H");
+    }
+
+    @Override
+    protected void drawOrg(Graphics g, Color color, String nameLetter) {
+        drawShapeOrg(g, color);
+
+        g.setColor(Color.black);
+        g.setFont( new Font("Helvetica", Font.BOLD, 31));
+        FontMetrics metrics = world.getFontMetrics(g.getFont());
+        double x = ((double)(2 * point.x + 1) * FIELD_SIZE) / 2;
+        double y = ((double)(2 * point.y + 2) * FIELD_SIZE) / 2;
+        g.drawString(nameLetter, (int)(x - (metrics.stringWidth(nameLetter) / 2)) + 1, (int)(y - (g.getFont().getSize() / 2)) + 9);
     }
 }

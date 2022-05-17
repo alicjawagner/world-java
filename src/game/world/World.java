@@ -301,10 +301,11 @@ public class World extends JPanel implements ActionListener {
     }
 
     private void drawComments(Graphics g) {
-        g.setFont(new Font("Helvetica", Font.PLAIN, 12));
         g.setColor(new Color(13,15,17));
         int x = SCREEN_WIDTH - TEXT_FIELD_WIDTH;
         g.fillRect(x, 0, TEXT_FIELD_WIDTH, SCREEN_HEIGHT);
+
+        g.setFont(new Font("Helvetica", Font.PLAIN, 12));
         drawTextWithNewLines(g, text, x + 5, 3);
 
         if (human != null) {
@@ -315,10 +316,19 @@ public class World extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
-        g.setColor(Color.red);
+        String gameOver = "Game Over";
         g.setFont( new Font("Times New Roman",Font.BOLD, 45));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+
+        g.setColor(new Color(0,0,0, 170));
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+//        g.setColor(new Color(0,0,0, 180));
+//        g.fillRect((SCREEN_WIDTH - metrics2.stringWidth(gameOver))/2 - 10, (SCREEN_HEIGHT - g.getFont().getSize())/2 - 20,
+//                metrics2.stringWidth(gameOver) + 20, g.getFont().getSize() + 15);
+
+        g.setColor(Color.red);
+        g.drawString(gameOver, (SCREEN_WIDTH - metrics2.stringWidth(gameOver))/2, SCREEN_HEIGHT/2);
     }
 
     @Override

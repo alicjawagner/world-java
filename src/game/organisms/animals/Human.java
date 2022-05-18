@@ -33,10 +33,6 @@ public class Human extends Animal {
         initiative = 4;
     }
 
-    public int getPotionCountdown() {
-        return potionCountdown;
-    }
-
     public void setNextMove(final NextMove _nextMove) {
         nextMove = _nextMove;
     }
@@ -101,7 +97,6 @@ public class Human extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        //drawOrg(g, new Color(232,211,185), "H");
         drawOrg(g, Color.red, "H");
     }
 

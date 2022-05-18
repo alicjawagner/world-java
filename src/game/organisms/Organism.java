@@ -61,16 +61,8 @@ public abstract class Organism {
         return point;
     }
 
-    public int getBirthTime() {
-        return birthTime;
-    }
-
     public boolean getIsAlive() {
         return isAlive;
-    }
-
-    public int getStepRange() {
-        return stepRange;
     }
 
     public World getWorld() {
@@ -105,8 +97,8 @@ public abstract class Organism {
         return false;
     }
 
-    public boolean ifIWonTheFight(Organism attacker) {
-        return amIStronger(attacker) == Strength.STRONGER;
+    public boolean ifILostTheFight(Organism attacker) {
+        return amIStronger(attacker) != Strength.STRONGER;
     }
 
     public ArrayList<Point> findFieldsToMove() {

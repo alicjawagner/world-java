@@ -1,6 +1,6 @@
 package game.world;
 
-//from the greatest initiative
+// ordered from the greatest initiative to the least
 public enum OrganismsNames {
     FOX,
     WOLF,

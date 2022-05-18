@@ -16,12 +16,12 @@ public class Guarana extends Plant {
     }
 
     @Override
-    public boolean ifIWonTheFight(Organism attacker) {
-        if (!super.ifIWonTheFight(attacker)) {
+    public boolean ifILostTheFight(Organism attacker) {
+        if (super.ifILostTheFight(attacker)) {
             attacker.setStrength(attacker.getStrength() + 3);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

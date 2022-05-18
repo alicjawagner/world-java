@@ -23,18 +23,20 @@ public class Antelope extends Animal {
     @Override
     public boolean ifIEscaped(Animal attacker) {
         if (rand.nextInt(100) < PROBABILITY_ESCAPING) {
-            Point myOld = new Point(point);
-            attacker.moveToField(myOld);
-
             stepRange = 1;
             ArrayList<Point> possibleMoves = findFieldsToMove();
             stepRange = 2;
             removeOccupiedFields(possibleMoves);
 
+            if (possibleMoves.size() == 0)
+                return false;
+
+            Point myOld = new Point(point);
+            attacker.moveToField(myOld);
+
             int which = rand.nextInt(possibleMoves.size());
-            Point newPoint = new Point(possibleMoves.get(which));
+            point = new Point(possibleMoves.get(which));
             putOnBoard();
-            point = newPoint;
 
             world.text += this + " escaped the fight ;) on field (" + attacker.getPoint().x + "," + attacker.getPoint().y + ")\n";
             return true;

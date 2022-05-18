@@ -47,7 +47,7 @@ public abstract class Animal extends Organism {
         else if (attacked.ifIEscaped(this)) {
             return;
         }
-        else if (!attacked.ifIWonTheFight(this)) {
+        else if (attacked.ifILostTheFight(this)) {
             world.clearTheField(point);
             point = attacked.getPoint();
             writeIWon();

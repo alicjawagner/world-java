@@ -1,6 +1,5 @@
 package game.world;
 
-import game.graphics.GamePanel;
 import game.organisms.Organism;
 import game.organisms.animals.*;
 import game.organisms.plants.*;
@@ -15,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class World extends JPanel implements ActionListener {
-
-    //static final int DELAY = 75;
-    //boolean running = false;
-    //Timer timer;
 
     public static final int TEXT_FIELD_WIDTH = 303;
     public static final int BOARD_SIZE = 700;
@@ -62,25 +57,8 @@ public class World extends JPanel implements ActionListener {
         board[point.x][point.y] = null;
     }
 
-    public Organism searchArrayList(final Point point, final ArrayList<Organism> arr) {
-        for (Organism o : arr) {
-            if (o.getIsAlive() && o.getPoint() == point) {
-                return o;
-            }
-        }
-        return null;
-    }
-
     public Organism findOnField(final Point point) {
-
         return board[point.x][point.y];
-
-//        Organism org = searchArrayList(point, organisms);
-//        if (org != null)
-//            return org;
-//
-//        org = searchArrayList(point, toAdd);
-//        return org;
     }
 
     private void removeDead() {
@@ -176,30 +154,7 @@ public class World extends JPanel implements ActionListener {
         addOrganism(createOrganism(which));
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////tu sie zaczyna grafika/////////////////////////////////////////////////////////////////////////
-    public void startGame() {
-
-        //running = true;
-        //timer = new Timer(DELAY,this);
-        //timer.start();
-
-        prepareGame();
-
-        //int ch = 1;
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // "Let's start the game!\n"
-        // jak uzywac: strzalkli, eliksir (+5 do Twojej sily)
-//        while (ch != -1) { //ch != ESC
-//            ch = nextRound();
-//            if (human == null) {
-//                // "Game over :C. Good luck next time!"
-//                break;
-//            }
-//        }
-    }
-
-    private void prepareGame() {
+    private void startGame() {
         for (OrganismsNames org : OrganismsNames.values()) {
             for (int i = 0; i < INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES; i++) {
                 if (org == OrganismsNames.HUMAN) {
@@ -209,7 +164,6 @@ public class World extends JPanel implements ActionListener {
                 createAndAddOrganism(org);
             }
         }
-        printBoardInConsole();
         repaint();
     }
 
@@ -231,57 +185,15 @@ public class World extends JPanel implements ActionListener {
             o.setBirthTime(numberOfBornOrganisms);
         }
         toAdd.clear();
-
-        //drawWorld();
-        //repaint();
-
-//        for (Organism o : organisms) {
-//            if (o.getIsAlive()) {
-//                o.action();
-//                printBoardInConsole();
-//            }
-//        }
-        printBoardInConsole();
-//        return 1;
-    }
-
-    public void printBoardInConsole() {
-        for (Organism o : organisms) {
-            System.out.println(o);
-        }
-        System.out.println();
-        for (Organism[] row : board) {
-            for (Organism o : row) {
-                if (o == null)
-                    System.out.print("_");
-                else if (o == human)
-                    System.out.print("h");
-                else
-                    System.out.print("x");
-            }
-            System.out.println();
-        }
     }
 
     private void drawWorld(Graphics g) {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         for(int i = 0; i < SCREEN_HEIGHT/FIELD_SIZE ; i++) {
             g.drawLine(i * FIELD_SIZE, 0, i * FIELD_SIZE, SCREEN_HEIGHT);
             g.drawLine(0, i * FIELD_SIZE, SCREEN_WIDTH, i * FIELD_SIZE);
         }
 
-        // for each org draw it
-        //      g.setColor(new Color(45,180,0));
-        //      g.fillRect(x[i], y[i], FIELD_SIZE, FIELD_SIZE);
-
-        /*
-        g.setColor(Color.red);
-        g.setFont( new Font("Ink Free",Font.BOLD, 40));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-         */
-        //human.draw(g);
         for (Organism o : organisms) {
             o.draw(g);
         }
@@ -317,7 +229,7 @@ public class World extends JPanel implements ActionListener {
 
     public void gameOver(Graphics g) {
         String gameOver = "Game Over";
-        g.setFont( new Font("Times New Roman",Font.BOLD, 45));
+        g.setFont( new Font("Times New Roman",Font.BOLD, 55));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
 
         g.setColor(new Color(0,0,0, 170));
@@ -329,20 +241,6 @@ public class World extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-//        if(running) {
-//            /*
-//            move();
-//            checkApple();
-//            checkCollisions();
-//             */
-//
-//        }
-//        else { //     gdzies dac ze running false
-//            timer.stop();
-//        }
-//
-//        repaint();
     }
 
     @Override

@@ -305,7 +305,6 @@ public class World extends JPanel implements ActionListener {
             }
 
             input.setVisible(false);
-            text = "Game state saved";
         });
     }
 
@@ -317,6 +316,7 @@ public class World extends JPanel implements ActionListener {
             o.writeMeToFile(writer);
 
         writer.close();
+        text = "Game state saved";
     }
 
     private void loadGameState() {
@@ -337,7 +337,6 @@ public class World extends JPanel implements ActionListener {
             }
 
             input.setVisible(false);
-            text = "Game state loaded";
         });
     }
 
@@ -373,7 +372,7 @@ public class World extends JPanel implements ActionListener {
                         o = new Antelope(this, elements);
                         break;
                     case "H":
-                        o = new Human(this);
+                        o = new Human(this, elements);
                         human = (Human) o;
                         break;
                     case "T":
@@ -402,7 +401,10 @@ public class World extends JPanel implements ActionListener {
                 }
 
             }
+            text = "Game state loaded";
         }
+        else
+            text = "File not found";
     }
 
 }

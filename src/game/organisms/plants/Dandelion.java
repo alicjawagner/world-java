@@ -15,6 +15,12 @@ public class Dandelion extends Plant {
         sign = "d";
     }
 
+    public Dandelion(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Dandelion";
+        sign = "d";
+    }
+
     @Override
     public void action() {
         for (int i = 0; i < 3; i++)

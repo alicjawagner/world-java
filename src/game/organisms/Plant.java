@@ -16,6 +16,11 @@ public abstract class Plant extends Organism {
         initiative = 0;
     }
 
+    public Plant(World _world, String[] arr) {
+        super(_world, arr);
+        initiative = 0;
+    }
+
     @Override
     public void action() {
         if (rand.nextInt(100) < PROBABILITY_OF_SPREADING) {

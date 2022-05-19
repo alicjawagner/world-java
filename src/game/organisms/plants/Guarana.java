@@ -16,6 +16,12 @@ public class Guarana extends Plant {
         sign = "u";
     }
 
+    public Guarana(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Guarana";
+        sign = "u";
+    }
+
     @Override
     public boolean ifILostTheFight(Organism attacker) {
         if (super.ifILostTheFight(attacker)) {

@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -25,10 +23,12 @@ public class World extends JPanel implements ActionListener {
     public static final int SCREEN_WIDTH = BOARD_SIZE + TEXT_FIELD_WIDTH;
     public static final int SCREEN_HEIGHT = BOARD_SIZE;
     private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
-    private static String PATH_TO_SAVES = ".\\src\\game\\saves\\";
+    private static final String PATH_TO_SAVES = ".\\src\\game\\saves\\";
     private static final String INSTRUCTIONS = "MOVEMENT:                                    arrows\n" +
                                                 "MAGIC POTION (strength +5):      P\n" +
-                                                "NEW ROUND:                                 N\n\n";
+                                                "NEW ROUND:                                 N\n" +
+                                                "SAVE:                                                S\n" +
+                                                "LOAD:                                                L\n\n";
 
     public String text = INSTRUCTIONS;
     public Organism[][] board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
@@ -280,6 +280,8 @@ public class World extends JPanel implements ActionListener {
                     case KeyEvent.VK_S:
                         saveGameState();
                         break;
+                    case KeyEvent.VK_L:
+                        loadGameState();
                 }
             }
         }
@@ -287,15 +289,14 @@ public class World extends JPanel implements ActionListener {
 
     private void saveGameState() {
         JFrame input = new JFrame();
-        JTextField textField  = new JTextField("Enter file name and hit \"enter\"", 30);
+        JTextField textField  = new JTextField("Saving: Enter file name and hit \"enter\"", 30);
         input.add(textField);
-        input.setSize(250,80);
+        input.setSize(300,80);
         input.setLocationRelativeTo(null);
         input.setVisible(true);
 
         textField.addActionListener(e -> {
             String fileName = textField.getText();
-            System.out.println(fileName);
 
             try {
                 saveToFile(fileName);
@@ -311,11 +312,97 @@ public class World extends JPanel implements ActionListener {
     private void saveToFile(final String fileName) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(PATH_TO_SAVES + fileName));
 
-        writer.write(numberOfBornOrganisms + " " + organisms.size() + "\n");
+        writer.write(numberOfBornOrganisms + Organism.DELIMITER + organisms.size() + "\n");
         for (Organism o : organisms)
             o.writeMeToFile(writer);
 
         writer.close();
+    }
+
+    private void loadGameState() {
+        JFrame input = new JFrame();
+        JTextField textField  = new JTextField("Loading: Enter file name and hit \"enter\"", 30);
+        input.add(textField);
+        input.setSize(300,80);
+        input.setLocationRelativeTo(null);
+        input.setVisible(true);
+
+        textField.addActionListener(e -> {
+            String fileName = textField.getText();
+
+            try {
+                loadFromFile(fileName);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            input.setVisible(false);
+            text = "Game state loaded";
+        });
+    }
+
+    private void loadFromFile(String fileName) throws IOException {
+        File file = new File(PATH_TO_SAVES + fileName);
+        if(file.exists()) {
+            board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
+            human = null;
+            organisms.clear();
+            toAdd.clear();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            String line = reader.readLine();
+            String[] elements = line.split(Organism.DELIMITER);
+            numberOfBornOrganisms = Integer.parseInt(elements[0]);
+            int orgSize = Integer.parseInt(elements[1]);
+
+            for (int i = 0; i < orgSize; i++) {
+                line = reader.readLine();
+                elements = line.split(Organism.DELIMITER);
+                Organism o = null;
+                switch(elements[0]) {
+                    case "F":
+                        o = new Fox(this, elements);
+                        break;
+                    case "W":
+                        o = new Wolf(this, elements);
+                        break;
+                    case "S":
+                        o = new Sheep(this, elements);
+                        break;
+                    case "A":
+                        o = new Antelope(this, elements);
+                        break;
+                    case "H":
+                        o = new Human(this);
+                        human = (Human) o;
+                        break;
+                    case "T":
+                        o = new Turtle(this, elements);
+                        break;
+                    case "g":
+                        o = new Grass(this, elements);
+                        break;
+                    case "d":
+                        o = new Dandelion(this, elements);
+                        break;
+                    case "u":
+                        o = new Guarana(this, elements);
+                        break;
+                    case "n":
+                        o = new DeadlyNightshade(this, elements);
+                        break;
+                    case "b":
+                        o = new PineBorscht(this, elements);
+                        break;
+                }
+
+                organisms.add(o);
+                if (o != null) {
+                    o.putOnBoard();
+                }
+
+            }
+        }
     }
 
 }

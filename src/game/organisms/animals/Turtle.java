@@ -19,6 +19,13 @@ public class Turtle extends Animal {
         sign = "T";
     }
 
+    public Turtle(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Turtle";
+        initiative = 1;
+        sign = "T";
+    }
+
     @Override
     public boolean ifIRepelledTheAttack(final Organism attacker) {
         if (attacker.getStrength() < 5) {

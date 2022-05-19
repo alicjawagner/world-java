@@ -15,6 +15,12 @@ public class Grass extends Plant {
         sign = "g";
     }
 
+    public Grass(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Grass";
+        sign = "g";
+    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.GRASS;

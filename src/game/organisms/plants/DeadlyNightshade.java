@@ -15,6 +15,12 @@ public class DeadlyNightshade extends Plant {
         sign = "n";
     }
 
+    public DeadlyNightshade(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Deadly Nightshade";
+        sign = "n";
+    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.DEADLY_NIGHTSHADE;

@@ -16,6 +16,13 @@ public class Wolf extends Animal {
         sign = "W";
     }
 
+    public Wolf(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Wolf";
+        initiative = 5;
+        sign = "W";
+    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.WOLF;

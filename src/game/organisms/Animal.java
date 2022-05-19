@@ -13,6 +13,10 @@ public abstract class Animal extends Organism {
         super(_world);
     }
 
+    public Animal(World _world, String[] arr) {
+        super(_world, arr);
+    }
+
     public boolean isTheSameSpecies(Organism other) {
         if (other == null) return false;
         return this.name.equals(other.name);

@@ -15,6 +15,12 @@ public class PineBorscht extends Plant {
         sign = "b";
     }
 
+    public PineBorscht(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Pine Borscht";
+        sign = "b";
+    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.PINE_BORSCHT;

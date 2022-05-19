@@ -36,6 +36,15 @@ public class Human extends Animal {
         sign = "H";
     }
 
+    public Human(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Human";
+        initiative = 4;
+        sign = "H";
+        potionWorking = Integer.parseInt(arr[5]);
+        potionCountdown = Integer.parseInt(arr[6]);
+    }
+
     public void setNextMove(final NextMove _nextMove) {
         nextMove = _nextMove;
     }

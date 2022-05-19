@@ -46,6 +46,16 @@ public abstract class Organism {
 
     }
 
+    public Organism(World _world, String[] arr) {
+        world = _world;
+        isAlive = true;
+        stepRange = 1;
+        point.x = Integer.parseInt(arr[1]);
+        point.y = Integer.parseInt(arr[2]);
+        birthTime = Integer.parseInt(arr[3]);
+        strength = Integer.parseInt(arr[4]);
+    }
+
     public abstract OrganismsNames whoAmI();
     public abstract void action();
     public abstract void draw(Graphics g);

@@ -16,6 +16,13 @@ public class Sheep extends Animal {
         sign = "S";
     }
 
+    public Sheep(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Sheep";
+        initiative = 4;
+        sign = "S";
+    }
+
     @Override
     public OrganismsNames whoAmI() {
         return OrganismsNames.SHEEP;

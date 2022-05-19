@@ -17,6 +17,13 @@ public class Fox extends Animal {
         sign = "F";
     }
 
+    public Fox(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Fox";
+        initiative = 7;
+        sign = "F";
+    }
+
     @Override
     public ArrayList<Point> findFieldsToMove() {
         ArrayList<Point> possibleMoves = super.findFieldsToMove();

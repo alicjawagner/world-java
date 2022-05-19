@@ -21,6 +21,14 @@ public class Antelope extends Animal {
         sign = "A";
     }
 
+    public Antelope(World _world, String[] arr) {
+        super(_world, arr);
+        name = "Antelope";
+        initiative = 4;
+        stepRange = 2;
+        sign = "A";
+    }
+
     @Override
     public boolean ifIEscaped(Animal attacker) {
         if (rand.nextInt(100) < PROBABILITY_ESCAPING) {

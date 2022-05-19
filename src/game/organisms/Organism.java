@@ -4,12 +4,16 @@ import game.world.OrganismsNames;
 import game.world.World;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import static game.world.World.FIELD_SIZE;
 
 public abstract class Organism {
+
+    public static final String DELIMITER = " ";
 
     protected String name;
     protected int strength;
@@ -19,6 +23,7 @@ public abstract class Organism {
     protected boolean isAlive;
     protected int stepRange;
     protected World world;
+    protected String sign;
     protected Random rand = new Random();
 
     public Organism(World _world) {
@@ -158,7 +163,7 @@ public abstract class Organism {
 
     protected abstract void drawShapeOrg(Graphics g, Color color);
 
-    protected void drawOrg(Graphics g, Color color, String nameLetter) {
+    protected void drawOrg(Graphics g, Color color) {
         drawShapeOrg(g, color);
 
         g.setColor(Color.white);
@@ -166,11 +171,20 @@ public abstract class Organism {
         FontMetrics metrics = world.getFontMetrics(g.getFont());
         double x = ((double)(2 * point.x + 1) * FIELD_SIZE) / 2;
         double y = ((double)(2 * point.y + 2) * FIELD_SIZE) / 2;
-        g.drawString(nameLetter, (int)(x - (metrics.stringWidth(nameLetter) / 2)), (int)(y - (g.getFont().getSize() / 2)) + 4);
+        g.drawString(sign, (int)(x - (metrics.stringWidth(sign) / 2)), (int)(y - (g.getFont().getSize() / 2)) + 4);
     }
 
     @Override
     public String toString() {
         return name + " (" + point.x + "," + point.y + ")";
+    }
+
+    public void writeMeToFile(BufferedWriter writer) throws IOException {
+        writer.write(sign + DELIMITER + point.x + DELIMITER + point.y + DELIMITER + birthTime + DELIMITER + strength);
+        myOwnFieldsToFile(writer);
+        writer.newLine();
+    }
+
+    protected void myOwnFieldsToFile(BufferedWriter writer) throws IOException {
     }
 }

@@ -13,6 +13,7 @@ public class Sheep extends Animal {
         name = "Sheep";
         strength = 4;
         initiative = 4;
+        sign = "S";
     }
 
     @Override
@@ -22,6 +23,6 @@ public class Sheep extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(211,211,211), "S");
+        drawOrg(g, new Color(211,211,211));
     }
 }

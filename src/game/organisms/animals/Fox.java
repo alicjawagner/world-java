@@ -14,6 +14,7 @@ public class Fox extends Animal {
         name = "Fox";
         strength = 3;
         initiative = 7;
+        sign = "F";
     }
 
     @Override
@@ -35,6 +36,6 @@ public class Fox extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(255,124,5), "F");
+        drawOrg(g, new Color(255,124,5));
     }
 }

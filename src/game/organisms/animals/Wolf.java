@@ -13,6 +13,7 @@ public class Wolf extends Animal {
         name = "Wolf";
         strength = 9;
         initiative = 5;
+        sign = "W";
     }
 
     @Override
@@ -22,6 +23,6 @@ public class Wolf extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(43,45,47), "W");
+        drawOrg(g, new Color(43,45,47));
     }
 }

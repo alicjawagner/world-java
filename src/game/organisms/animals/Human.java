@@ -5,6 +5,8 @@ import game.world.OrganismsNames;
 import game.world.World;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 import static game.world.World.FIELD_SIZE;
 
@@ -31,6 +33,7 @@ public class Human extends Animal {
         name = "Human";
         strength = 5;
         initiative = 4;
+        sign = "H";
     }
 
     public void setNextMove(final NextMove _nextMove) {
@@ -97,18 +100,18 @@ public class Human extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, Color.red, "H");
-    }
-
-    @Override
-    protected void drawOrg(Graphics g, Color color, String nameLetter) {
-        drawShapeOrg(g, color);
+        drawShapeOrg(g, Color.red);
 
         g.setColor(Color.black);
         g.setFont( new Font("Helvetica", Font.BOLD, 31));
         FontMetrics metrics = world.getFontMetrics(g.getFont());
         double x = ((double)(2 * point.x + 1) * FIELD_SIZE) / 2;
         double y = ((double)(2 * point.y + 2) * FIELD_SIZE) / 2;
-        g.drawString(nameLetter, (int)(x - (metrics.stringWidth(nameLetter) / 2)) + 1, (int)(y - (g.getFont().getSize() / 2)) + 9);
+        g.drawString(String.valueOf(sign), (int)(x - (metrics.stringWidth(String.valueOf(sign)) / 2)) + 1, (int)(y - (g.getFont().getSize() / 2)) + 9);
+    }
+
+    @Override
+    protected void myOwnFieldsToFile(BufferedWriter writer) throws IOException {
+        writer.write(DELIMITER + potionWorking + DELIMITER + potionCountdown);
     }
 }

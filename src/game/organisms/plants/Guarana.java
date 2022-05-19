@@ -13,6 +13,7 @@ public class Guarana extends Plant {
         super(_world);
         name = "Guarana";
         strength = 0;
+        sign = "u";
     }
 
     @Override
@@ -36,6 +37,6 @@ public class Guarana extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(126,200,80), "U");
+        drawOrg(g, new Color(126,200,80));
     }
 }

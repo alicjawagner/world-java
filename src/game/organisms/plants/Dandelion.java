@@ -12,6 +12,7 @@ public class Dandelion extends Plant {
         super(_world);
         name = "Dandelion";
         strength = 0;
+        sign = "d";
     }
 
     @Override
@@ -27,6 +28,6 @@ public class Dandelion extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(245,187,0), "D");
+        drawOrg(g, new Color(245,187,0));
     }
 }

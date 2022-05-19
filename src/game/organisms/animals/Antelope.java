@@ -18,6 +18,7 @@ public class Antelope extends Animal {
         strength = 4;
         initiative = 4;
         stepRange = 2;
+        sign = "A";
     }
 
     @Override
@@ -70,6 +71,6 @@ public class Antelope extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(158,121,104), "A");
+        drawOrg(g, new Color(158,121,104));
     }
 }

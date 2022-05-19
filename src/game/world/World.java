@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -22,6 +25,7 @@ public class World extends JPanel implements ActionListener {
     public static final int SCREEN_WIDTH = BOARD_SIZE + TEXT_FIELD_WIDTH;
     public static final int SCREEN_HEIGHT = BOARD_SIZE;
     private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
+    private static String PATH_TO_SAVES = ".\\src\\game\\saves\\";
     private static final String INSTRUCTIONS = "MOVEMENT:                                    arrows\n" +
                                                 "MAGIC POTION (strength +5):      P\n" +
                                                 "NEW ROUND:                                 N\n\n";
@@ -273,9 +277,45 @@ public class World extends JPanel implements ActionListener {
                     case KeyEvent.VK_N:
                         nextRound();
                         break;
+                    case KeyEvent.VK_S:
+                        saveGameState();
+                        break;
                 }
             }
         }
+    }
+
+    private void saveGameState() {
+        JFrame input = new JFrame();
+        JTextField textField  = new JTextField("Enter file name and hit \"enter\"", 30);
+        input.add(textField);
+        input.setSize(250,80);
+        input.setLocationRelativeTo(null);
+        input.setVisible(true);
+
+        textField.addActionListener(e -> {
+            String fileName = textField.getText();
+            System.out.println(fileName);
+
+            try {
+                saveToFile(fileName);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            input.setVisible(false);
+            text = "Game state saved";
+        });
+    }
+
+    private void saveToFile(final String fileName) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(PATH_TO_SAVES + fileName));
+
+        writer.write(numberOfBornOrganisms + " " + organisms.size() + "\n");
+        for (Organism o : organisms)
+            o.writeMeToFile(writer);
+
+        writer.close();
     }
 
 }

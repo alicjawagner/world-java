@@ -12,6 +12,7 @@ public class Grass extends Plant {
         super(_world);
         name = "Grass";
         strength = 0;
+        sign = "g";
     }
 
     @Override
@@ -21,6 +22,6 @@ public class Grass extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(86,125,70), "G");
+        drawOrg(g, new Color(86,125,70));
     }
 }

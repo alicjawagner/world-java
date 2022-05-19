@@ -12,6 +12,7 @@ public class PineBorscht extends Plant {
         super(_world);
         name = "Pine Borscht";
         strength = 10;
+        sign = "b";
     }
 
     @Override
@@ -43,6 +44,6 @@ public class PineBorscht extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(204,235,68), "B");
+        drawOrg(g, new Color(204,235,68));
     }
 }

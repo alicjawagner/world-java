@@ -12,6 +12,7 @@ public class DeadlyNightshade extends Plant {
         super(_world);
         name = "Deadly Nightshade";
         strength = 99;
+        sign = "n";
     }
 
     @Override
@@ -26,6 +27,6 @@ public class DeadlyNightshade extends Plant {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(33,37,77), "N");
+        drawOrg(g, new Color(33,37,77));
     }
 }

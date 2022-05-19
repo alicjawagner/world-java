@@ -16,6 +16,7 @@ public class Turtle extends Animal {
         name = "Turtle";
         strength = 2;
         initiative = 1;
+        sign = "T";
     }
 
     @Override
@@ -41,6 +42,6 @@ public class Turtle extends Animal {
 
     @Override
     public void draw(Graphics g) {
-        drawOrg(g, new Color(138,154,91), "T");
+        drawOrg(g, new Color(138,154,91));
     }
 }

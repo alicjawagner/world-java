@@ -6,10 +6,7 @@ import game.organisms.plants.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -42,6 +39,7 @@ public class World extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new World.MyKeyAdapter());
+        this.addMouseListener(new World.MyMouseListener());
         startGame();
     }
 
@@ -253,40 +251,6 @@ public class World extends JPanel implements ActionListener {
         drawWorld(g);
     }
 
-    public class MyKeyAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (human != null) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_P:
-                        human.startElixir();
-                        human.setNextMove(Human.NextMove.STAY);
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        human.setNextMove(Human.NextMove.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        human.setNextMove(Human.NextMove.RIGHT);
-                        break;
-                    case KeyEvent.VK_UP:
-                        human.setNextMove(Human.NextMove.UP);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        human.setNextMove(Human.NextMove.DOWN);
-                        break;
-                    case KeyEvent.VK_N:
-                        nextRound();
-                        break;
-                    case KeyEvent.VK_S:
-                        saveGameState();
-                        break;
-                    case KeyEvent.VK_L:
-                        loadGameState();
-                }
-            }
-        }
-    }
-
     private void saveGameState() {
         JFrame input = new JFrame();
         JTextField textField  = new JTextField("Saving: Enter file name and hit \"enter\"", 30);
@@ -407,4 +371,106 @@ public class World extends JPanel implements ActionListener {
             text = "File not found";
     }
 
+    private class MyKeyAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (human != null) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_P:
+                        human.startElixir();
+                        human.setNextMove(Human.NextMove.STAY);
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        human.setNextMove(Human.NextMove.LEFT);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        human.setNextMove(Human.NextMove.RIGHT);
+                        break;
+                    case KeyEvent.VK_UP:
+                        human.setNextMove(Human.NextMove.UP);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        human.setNextMove(Human.NextMove.DOWN);
+                        break;
+                    case KeyEvent.VK_N:
+                        nextRound();
+                        break;
+                    case KeyEvent.VK_S:
+                        saveGameState();
+                        break;
+                    case KeyEvent.VK_L:
+                        loadGameState();
+                }
+            }
+        }
+    }
+
+    private class MyMouseListener implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Point field = getMouseField(new Point(e.getPoint()));
+            if (field == null)
+                return;
+
+            if (findOnField(field) == null) {
+                showMenuAndAddOrg(field);
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+
+    private Point getMouseField(Point mouseLocation) {
+        Point mouseField = new Point();
+        mouseField.x = (int)(mouseLocation.x / FIELD_SIZE);
+        mouseField.y = (int)(mouseLocation.y / FIELD_SIZE);
+        if (mouseField.x >= FIELDS_NUMBER || mouseField.y >= FIELDS_NUMBER)
+            return null;
+        return mouseField;
+    }
+
+    private void showMenuAndAddOrg(Point field) {
+        JFrame f = new JFrame();
+
+        OrganismsNames[] orgArr = new OrganismsNames[10];
+        int i = 0;
+        for (OrganismsNames name : OrganismsNames.values()) {
+            if (name == OrganismsNames.HUMAN)
+                continue;
+            orgArr[i] = name;
+            i++;
+        }
+
+        JComboBox<OrganismsNames> comboBox = new JComboBox<>(orgArr);
+        comboBox.addActionListener(e -> {
+            if(e.getSource() == comboBox) {
+                if (comboBox.getSelectedItem() != null) {
+                    Organism o = createOrganism((OrganismsNames) comboBox.getSelectedItem());
+                    addOrganism(o);
+                    o.moveToField(field);
+                    f.setVisible(false);
+                }
+            }
+        });
+
+        f.add(comboBox);
+        f.setSize(200, 75);
+        f.setLocationRelativeTo(null);
+        f.setLayout(new FlowLayout());
+        f.setVisible(true);
+    }
 }

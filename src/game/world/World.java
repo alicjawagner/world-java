@@ -436,8 +436,8 @@ public class World extends JPanel implements ActionListener {
 
     private Point getMouseField(Point mouseLocation) {
         Point mouseField = new Point();
-        mouseField.x = (int)(mouseLocation.x / FIELD_SIZE);
-        mouseField.y = (int)(mouseLocation.y / FIELD_SIZE);
+        mouseField.x = (mouseLocation.x / FIELD_SIZE);
+        mouseField.y = (mouseLocation.y / FIELD_SIZE);
         if (mouseField.x >= FIELDS_NUMBER || mouseField.y >= FIELDS_NUMBER)
             return null;
         return mouseField;

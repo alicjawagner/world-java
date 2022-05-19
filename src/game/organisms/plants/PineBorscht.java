@@ -38,6 +38,7 @@ public class PineBorscht extends Plant {
                 }
             }
         }
+        super.action();
     }
 
     @Override

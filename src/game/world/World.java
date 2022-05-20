@@ -6,12 +6,10 @@ import game.organisms.plants.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class World extends JPanel implements ActionListener {
+public class World extends JPanel {
 
     public static final int TEXT_FIELD_WIDTH = 303;
     public static final int BOARD_SIZE = 700;
@@ -19,8 +17,8 @@ public class World extends JPanel implements ActionListener {
     public static final int FIELDS_NUMBER = (BOARD_SIZE / FIELD_SIZE); //20 - how many fields each dimension
     public static final int SCREEN_WIDTH = BOARD_SIZE + TEXT_FIELD_WIDTH;
     public static final int SCREEN_HEIGHT = BOARD_SIZE;
-    private static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
-    private static final String PATH_TO_SAVES = ".\\src\\game\\saves\\";
+    public static final int INITIAL_NUMBER_OF_ORGANISMS_OF_SPECIES = 3;
+    public static final String PATH_TO_SAVES = ".\\src\\game\\saves\\";
     private static final String INSTRUCTIONS = "MOVEMENT:                                    arrows\n" +
                                                 "MAGIC POTION (strength +5):      P\n" +
                                                 "NEW ROUND:                                 N\n" +
@@ -29,22 +27,34 @@ public class World extends JPanel implements ActionListener {
 
     public String text = INSTRUCTIONS;
     public Organism[][] board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
-    private int numberOfBornOrganisms = 0;
-    private Human human = null;
     public ArrayList<Organism> organisms = new ArrayList<>();
     public ArrayList<Organism> toAdd = new ArrayList<>();
+    private int numberOfBornOrganisms = 0;
+    private Human human = null;
 
     public World() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
-        this.addKeyListener(new World.MyKeyAdapter());
-        this.addMouseListener(new World.MyMouseListener());
+        this.addKeyListener(new MyKeyAdapter(this));
+        this.addMouseListener(new MyMouseListener(this));
         startGame();
     }
 
     public int getNumberOfBornOrganisms() {
         return numberOfBornOrganisms;
+    }
+
+    public Human getHuman() {
+        return human;
+    }
+
+    public void setNumberOfBornOrganisms(int howMany) {
+        numberOfBornOrganisms = howMany;
+    }
+
+    public void setHuman(Human h) {
+        human = h;
     }
 
     public boolean isFieldInBoard(final Point point) {
@@ -61,6 +71,14 @@ public class World extends JPanel implements ActionListener {
 
     public Organism findOnField(final Point point) {
         return board[point.x][point.y];
+    }
+
+    public OrganismsNames whatIsOnBoard(final Point where) {
+        Organism who = board[where.x][where.y];
+        if (who == null)
+            return null;
+
+        return who.whoAmI();
     }
 
     private void removeDead() {
@@ -86,14 +104,6 @@ public class World extends JPanel implements ActionListener {
 
     public void insertIntoToAdd(Organism newOrg) {
         toAdd.add(newOrg);
-    }
-
-    public OrganismsNames whatIsOnBoard(final Point where) {
-        Organism who = board[where.x][where.y];
-        if (who == null)
-            return null;
-
-        return who.whoAmI();
     }
 
     public Organism createOrganism(final OrganismsNames which) {
@@ -169,7 +179,7 @@ public class World extends JPanel implements ActionListener {
         repaint();
     }
 
-    private void nextRound() {
+    public void nextRound() {
         text = INSTRUCTIONS;
         if (human != null)
             human.resetPotionText();
@@ -229,7 +239,7 @@ public class World extends JPanel implements ActionListener {
         }
     }
 
-    public void gameOver(Graphics g) {
+    private void gameOver(Graphics g) {
         String gameOver = "Game Over";
         g.setFont( new Font("Times New Roman",Font.BOLD, 55));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
@@ -242,235 +252,9 @@ public class World extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
-    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawWorld(g);
     }
 
-    private void saveGameState() {
-        JFrame input = new JFrame();
-        JTextField textField  = new JTextField("Saving: Enter file name and hit \"enter\"", 30);
-        input.add(textField);
-        input.setSize(300,80);
-        input.setLocationRelativeTo(null);
-        input.setVisible(true);
-
-        textField.addActionListener(e -> {
-            String fileName = textField.getText();
-
-            try {
-                saveToFile(fileName);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            input.setVisible(false);
-        });
-    }
-
-    private void saveToFile(final String fileName) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(PATH_TO_SAVES + fileName));
-
-        writer.write(numberOfBornOrganisms + Organism.DELIMITER + organisms.size() + "\n");
-        for (Organism o : organisms)
-            o.writeMeToFile(writer);
-
-        writer.close();
-        text = "Game state saved";
-    }
-
-    private void loadGameState() {
-        JFrame input = new JFrame();
-        JTextField textField  = new JTextField("Loading: Enter file name and hit \"enter\"", 30);
-        input.add(textField);
-        input.setSize(300,80);
-        input.setLocationRelativeTo(null);
-        input.setVisible(true);
-
-        textField.addActionListener(e -> {
-            String fileName = textField.getText();
-
-            try {
-                loadFromFile(fileName);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            input.setVisible(false);
-        });
-    }
-
-    private void loadFromFile(String fileName) throws IOException {
-        File file = new File(PATH_TO_SAVES + fileName);
-        if(file.exists()) {
-            board = new Organism[FIELDS_NUMBER][FIELDS_NUMBER];
-            human = null;
-            organisms.clear();
-            toAdd.clear();
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-
-            String line = reader.readLine();
-            String[] elements = line.split(Organism.DELIMITER);
-            numberOfBornOrganisms = Integer.parseInt(elements[0]);
-            int orgSize = Integer.parseInt(elements[1]);
-
-            for (int i = 0; i < orgSize; i++) {
-                line = reader.readLine();
-                elements = line.split(Organism.DELIMITER);
-                Organism o = null;
-                switch(elements[0]) {
-                    case "F":
-                        o = new Fox(this, elements);
-                        break;
-                    case "W":
-                        o = new Wolf(this, elements);
-                        break;
-                    case "S":
-                        o = new Sheep(this, elements);
-                        break;
-                    case "A":
-                        o = new Antelope(this, elements);
-                        break;
-                    case "H":
-                        o = new Human(this, elements);
-                        human = (Human) o;
-                        break;
-                    case "T":
-                        o = new Turtle(this, elements);
-                        break;
-                    case "g":
-                        o = new Grass(this, elements);
-                        break;
-                    case "d":
-                        o = new Dandelion(this, elements);
-                        break;
-                    case "u":
-                        o = new Guarana(this, elements);
-                        break;
-                    case "n":
-                        o = new DeadlyNightshade(this, elements);
-                        break;
-                    case "b":
-                        o = new PineBorscht(this, elements);
-                        break;
-                }
-
-                organisms.add(o);
-                if (o != null) {
-                    o.putOnBoard();
-                }
-
-            }
-            text = "Game state loaded";
-        }
-        else
-            text = "File not found";
-    }
-
-    private class MyKeyAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (human != null) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_P:
-                        human.startElixir();
-                        human.setNextMove(Human.NextMove.STAY);
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        human.setNextMove(Human.NextMove.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        human.setNextMove(Human.NextMove.RIGHT);
-                        break;
-                    case KeyEvent.VK_UP:
-                        human.setNextMove(Human.NextMove.UP);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        human.setNextMove(Human.NextMove.DOWN);
-                        break;
-                    case KeyEvent.VK_N:
-                        nextRound();
-                        break;
-                    case KeyEvent.VK_S:
-                        saveGameState();
-                        break;
-                    case KeyEvent.VK_L:
-                        loadGameState();
-                }
-            }
-        }
-    }
-
-    private class MyMouseListener implements MouseListener {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Point field = getMouseField(new Point(e.getPoint()));
-            if (field == null)
-                return;
-
-            if (findOnField(field) == null) {
-                showMenuAndAddOrg(field);
-            }
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-        }
-    }
-
-    private Point getMouseField(Point mouseLocation) {
-        Point mouseField = new Point();
-        mouseField.x = (mouseLocation.x / FIELD_SIZE);
-        mouseField.y = (mouseLocation.y / FIELD_SIZE);
-        if (mouseField.x >= FIELDS_NUMBER || mouseField.y >= FIELDS_NUMBER)
-            return null;
-        return mouseField;
-    }
-
-    private void showMenuAndAddOrg(Point field) {
-        JFrame f = new JFrame();
-
-        OrganismsNames[] orgArr = new OrganismsNames[10];
-        int i = 0;
-        for (OrganismsNames name : OrganismsNames.values()) {
-            if (name == OrganismsNames.HUMAN)
-                continue;
-            orgArr[i] = name;
-            i++;
-        }
-
-        JComboBox<OrganismsNames> comboBox = new JComboBox<>(orgArr);
-        comboBox.addActionListener(e -> {
-            if(e.getSource() == comboBox) {
-                if (comboBox.getSelectedItem() != null) {
-                    Organism o = createOrganism((OrganismsNames) comboBox.getSelectedItem());
-                    addOrganism(o);
-                    o.moveToField(field);
-                    f.setVisible(false);
-                }
-            }
-        });
-
-        f.add(comboBox);
-        f.setSize(200, 75);
-        f.setLocationRelativeTo(null);
-        f.setLayout(new FlowLayout());
-        f.setVisible(true);
-    }
 }

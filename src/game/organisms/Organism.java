@@ -100,8 +100,8 @@ public abstract class Organism {
 
     protected Strength amIStronger(final Organism other) {
         if (strength > other.strength) return Strength.STRONGER;
-	else if (strength == other.strength) return Strength.EQUAL;
-	else return Strength.WEAKER;
+	    else if (strength == other.strength) return Strength.EQUAL;
+	    else return Strength.WEAKER;
     }
 
     public boolean ifIRepelledTheAttack(final Organism attacker) {
